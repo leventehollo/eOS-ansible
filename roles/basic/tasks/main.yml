@@ -1,0 +1,78 @@
+---
+- name: Update package list
+  apt: update_cache=yes cache_valid_time=86400
+
+- name: Upgrade packages
+  apt: upgrade=dist
+  register: hello
+- debug: msg="{{ hello.stdout }}"
+  ignore_errors: True
+
+- name: Install pre-requisite packages
+  apt: name={{item}} state=latest allow_unauthenticated=yes  
+  with_items:
+    - python-pycurl
+
+- name: Install system tools
+  apt: name={{item}} state=latest
+  with_items:
+    - guake
+    - gparted
+    - unetbootin
+    - axel
+
+- name: Add PPA repository for Aptik
+  apt_repository: repo='ppa:teejee2008/ppa'
+- name: Install Aptik
+  apt: name=aptik state=latest
+
+- name: Install configuration managers
+  apt: name={{item}} state=latest
+  with_items:
+    - gconf-editor
+    - dconf-editor
+
+- name: Install archive formats
+  apt: name={{item}} state=latest
+  with_items:
+  - unace
+  - rar
+  - unrar
+  - p7zip-rar
+  - p7zip
+  - sharutils
+  - uudeview
+  - mpack
+  - arj
+  - cabextract
+  - lzip
+  - lunzip
+
+- name: Install package management tools
+  apt: name={{item}} state=latest
+  with_items:
+    - aptitude
+    - synaptic
+    - gdebi-core
+
+- name: Install system monitoring tools
+  apt: name={{item}} state=latest
+  with_items:
+    - htop
+    - cpufrequtils
+    - gnome-system-monitor
+    - upower
+
+- name: Install file managers
+  apt: name={{item}} state=latest
+  with_items:
+    - mc
+    - nemo
+
+- name: Install Gnome tools
+  apt: name={{item}} state=latest
+  with_items:
+    - gnome-screensaver
+    - menulibre
+    - clipit
+    - aptik

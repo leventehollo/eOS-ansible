@@ -1,0 +1,197 @@
+---
+- name: Update package list
+  apt: update_cache=yes cache_valid_time=86400
+
+- name: Add PPA repo for Elementary Tweaks
+  apt_repository: repo='ppa:mpstark/elementary-tweaks-daily'
+- name: Install Elementary Tweaks
+  apt: name=elementary-tweaks state=latest
+
+- name: Remove unnecessary applications
+  apt: name={{item}} state=absent
+  with_items:
+    - midori-granite
+    - pantheon-files
+  ignore_errors: True
+
+- name: Add PPA repo for Moka icon set
+  apt_repository: repo='ppa:moka/stable'
+
+- name: Install Moka icon themes
+  apt: name={{item}} state=latest
+  with_items:
+    - plank-theme-orchis
+    - moka-icon-theme
+    - faba-icon-theme
+
+- name: Add PPA repo for Numix icon set
+  apt_repository: repo='ppa:numix/ppa'
+
+- name: Install Numix icon themes
+  apt: name={{item}} state=latest
+  with_items:
+    - numix-icon-theme
+
+- name: Configure workspaces
+  gsetting: user=lev
+            key={{item[0]}}
+            value={{item[1]}}
+  with_items:
+    - ['org.gnome.mutter.dynamic-workspaces','true']
+    - ['org.gnome.mutter.workspaces-only-on-primary', 'true']
+
+# Indicators
+
+- name: Check if indicator-workspaces_0.5_all is installed
+  command: dpkg-query -W indicator-workspaces_0.5_all
+  register: vagrant_check_deb
+  failed_when: vagrant_check_deb.rc > 1
+  changed_when: vagrant_check_deb.rc == 1
+
+- name: Download indicator-workspaces_0.5_all.deb
+  get_url:
+    url="https://github.com/dyson/indicator-workspaces/releases/download/v0.5/indicator-workspaces_0.5_all.deb"
+    dest="/home/lev/Downloads/indicator-workspaces_0.5_all.deb"
+  when: vagrant_check_deb.rc == 1
+
+- name: Install indicator-workspaces_0.5_all
+  apt: deb="/home/lev/Downloads/indicator-workspaces_0.5_all.deb"
+  sudo: true
+  when: vagrant_check_deb.rc == 1
+
+- name: Install Numix icon themes
+  apt: name={{item}} state=latest
+  with_items:
+    - indicator-cpufreq
+    - indicator-multiload
+
+- name: Configure Session Indicator
+  gsetting: user=lev
+            key={{item[0]}}
+            value={{item[1]}}
+  with_items:
+    - ['com.canonical.indicator.session.show-real-name-on-panel', 'false']
+    - ['com.canonical.indicator.session.suppress-logout-menuitem', 'false']
+    - ['com.canonical.indicator.session.suppress-logout-restart-shutdown', 'true']
+    - ['com.canonical.indicator.session.suppress-restart-menuitem', 'false']
+    - ['com.canonical.indicator.session.suppress-shutdown-menuitem', 'false']
+    - ['com.canonical.indicator.session.user-show-menu', 'true']
+
+- name: Configure Workspaces Indicator
+  gsetting: user=lev
+            key={{item[0]}}
+            value={{item[1]}}
+  with_items:
+    - ['apps.indicator-workspaces show-label', 'false']
+
+- name: Configure Multiload Indicator
+  gsetting: user=lev
+            key={{item[0]}}
+            value={{item[1]}}
+  with_items:
+    - ['de.mh21.indicator.multiload.general.autostart', 'true']
+    - ['de.mh21.indicator.multiload.graphs.cpu.enabled', 'true']
+    - ['de.mh21.indicator.multiload.graphs.disk.enabled', 'true']
+    - ['de.mh21.indicator.multiload.graphs.mem.enabled', 'true']
+    - ['de.mh21.indicator.multiload.graphs.swap.enabled', 'true']
+    - ['de.mh21.indicator.multiload.general.system-monitor', 'gnome-system-monitor']
+
+- name: Configure DateTime Indicator
+  gsetting: user=lev
+            key={{item[0]}}
+            value={{item[1]}}
+  with_items:
+    - ['com.canonical.indicator.datetime.show-calendar', 'true']
+    - ['com.canonical.indicator.datetime.show-clock', 'true']
+    - ['com.canonical.indicator.datetime.show-date', 'true']
+    - ['com.canonical.indicator.datetime.show-day', 'true']
+    - ['com.canonical.indicator.datetime.show-events', 'true']
+    - ['com.canonical.indicator.datetime.show-locations', 'true']
+    - ['com.canonical.indicator.datetime.show-seconds', 'true']
+    - ['com.canonical.indicator.datetime.show-week-numbers', 'true']
+    - ['com.canonical.indicator.datetime.show-year', 'true']
+
+- name: Configure Power Indicator
+  gsetting: user=lev
+            key={{item[0]}}
+            value={{item[1]}}
+  with_items:
+    - ['com.canonical.indicator.power.show-percentage', 'true']
+    - ['com.canonical.indicator.power.show-time', 'true']
+
+- name: Configure Sound Indicator
+  gsetting: user=lev
+            key={{item[0]}}
+            value={{item[1]}}
+  with_items:
+    - ['com.canonical.indicator.sound global-mute', 'true']
+
+- name: Configure Ubuntu
+  gsetting: user=lev
+            key={{item[0]}}
+            value={{item[1]}}
+  with_items:
+    - ['com.ubuntu.update-notifier.show-apport-cashes', 'false']
+
+- name: Configure Appearance
+  gsetting: user=lev
+            key={{item[0]}}
+            value={{item[1]}}
+  with_items:
+    - ['org.pantheon.desktop.gala.appearance.alt-tab-window-opacity', '0.3']
+    - ['org.pantheon.desktop.gala.appearance.button-layout', 'close:minimize,maximize']
+    - ['org.pantheon.desktop.gala.behavior.dynamic-workspaces', 'true']
+    - ['org.pantheon.desktop.gala.behavior.hotcorner-topleft', 'window-overview-all']
+    - ['org.pantheon.desktop.gala.behavior.hotcorner-topright', 'show-workspace-view']
+    - ['org.pantheon.desktop.wingpanel.auto-adjust-alpha', 'false']
+    - ['org.pantheon.desktop.wingpanel.background-alpha', '0.0']
+    - ['org.pantheon.desktop.wingpanel.show-launcher', 'false']
+
+- name: Configure Interface
+  gsetting: user=lev
+            key={{item[0]}}
+            value={{item[1]}}
+  with_items:
+    - ['org.gnome.desktop.background.show-desktop-icons', 'false']
+    - ['org.gnome.desktop.interface.clock-format', '24h']
+    - ['org.gnome.desktop.interface.clock-show-date', 'true']
+    - ['org.gnome.desktop.interface.clock-show-seconds', 'true']
+    - ['org.gnome.desktop.interface.cursor-theme', 'whiteglass']
+    - ['org.gnome.desktop.interface.cursor-blink-time', '600']
+    - ['org.gnome.desktop.interface.font-name', 'Droid Sans 8']
+    - ['org.gnome.desktop.interface.gtk-theme', 'elementary']
+    - ['org.gnome.desktop.interface.icon-theme', 'Numix-Beve']
+    - ['org.gnome.desktop.interface.monospace-font-name', 'Droid Sans Mono 8']
+    - ['org.gnome.desktop.interface.document-font-name', 'Open Sans 8']
+    - ['org.gnome.SessionManager.auto-save-session', 'true']
+
+- name: Configure Files App
+  gsetting: user=lev
+            key={{item[0]}}
+            value={{item[1]}}
+  with_items:
+    - ['org.pantheon.files.list-view.zoom-level', 'smallest']
+    - ['org.pantheon.files.preferences.date-format', 'iso']
+    - ['org.pantheon.files.preferences.default-viewmode', 'list']
+    - ['org.pantheon.files.preferences.restore-tabs', 'true']
+    - ['org.pantheon.files.preferences.single-click', 'false']
+    - ['org.gtk.Settings.FileChooser.sort-directories-first', ''true]
+
+- name: Configure Shotwell
+  gsetting: user=lev
+            key={{item[0]}}
+            value={{item[1]}}
+  with_items:
+    - ['org.yorba.shotwell.preferences.editing.external-photo-editor', 'gimp']
+    - ['org.yorba.shotwell.preferences.editing.external-raw-editor, 'rawtherapee']
+
+- name: Configure Key bindings
+  gsetting: user=lev
+            key={{item[0]}}
+            value={{item[1]}}
+  with_items:
+    - ['org.gnome.desktop.wm.keybindings begin-move', '[]']
+    - ['org.gnome.desktop.wm.keybindings begin-resize', '[]']
+    - ['org.gnome.desktop.wm.keybindings cycle-group', '[]']
+    - ['org.gnome.desktop.wm.keybindings cycle-windows', '']
+    - ['org.gnome.desktop.wm.keybindings cycle-panels', '']

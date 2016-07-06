@@ -1,0 +1,16 @@
+---
+- name: Update package list
+  apt: update_cache=yes cache_valid_time=86400
+
+- name: Remove unnecessary applications
+  apt: name={{item}} state=absent
+  with_items:
+    - light-locker
+    - light-locker-settings
+  ignore_errors: True
+
+- name: Install nvidia
+  apt: name={{item}} state=latest
+  with_items:
+    - xscreensaver
+    - nvidia-settings

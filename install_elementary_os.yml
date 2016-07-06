@@ -1,0 +1,9 @@
+---
+- hosts: localhost
+  connection: local
+  gather_facts: no
+  sudo: yes
+  roles:
+    #- basic
+    #- elementary_os
+    - browsers
