@@ -1,0 +1,74 @@
+---
+- name: Install Git  
+  apt: name=git state=latest
+
+- name: Install Git plugin for Sublimetext if installed
+  command: dpkg-query -W sublime-text
+  register: sublimetext_check
+
+- name: Install Sublimetext plugins
+  include_role:
+    name: igor_mukhin.sublimetext3_packagecontrol
+    vars:      
+      packagecontrol_packages: 
+        - "Git"
+        - "GitGutter"
+  when: sublimetext_check.rc == 1
+
+# OpenJDK
+- name: Install Java 8 OpenJDK
+  apt: name={{item}} state=latest
+  with_items:
+    - openjdk-8-jdk
+    - openjdk-8-doc
+    - openjdk-8-jre-lib    
+  tags: 
+    - dev-java
+
+#- name: Install Java 8 OpenJDK
+#  include_role:
+#    name: ChristopherDavenport.universal-java    
+#    vars:
+#      java_type: Open
+#      java_version: "8"
+#      java_home: "{{java_home}}"
+#  tags:
+#    - dev-java
+
+# IntelliJ IDEA
+- name: Install IntelliJ IDEA
+  include_role:      
+    name: gantsign.intellij
+    vars:
+      intellij_default_jdk_home: "{{intellij_default_jdk_home}}"
+      intellij_default_jdk: "{{intellij_default_jdk}}"
+      intellij_default_maven_home: "{{intellij_default_maven_home}}"
+      intellij_plugins:
+        - CheckStyle-IDEA
+      intellij_disabled_plugins:            
+        - CVS
+        - com.intellij.uiDesigner            
+        - TestNG-J
+        - hg4idea            
+        - AntSupport
+        - DevKit
+      intellij_codestyles:
+        - name: GoogleStyle
+          url: 'https://raw.githubusercontent.com/google/styleguide/gh-pages/intellij-java-google-style.xml'
+      intellij_active_codestyle: GoogleStyle
+  tags:
+    - dev-java
+
+# IntelliJ PyCharm
+- name: Install IntelliJ PyCharm
+  include_role: 
+    name: tersmitten.pycharm
+  tags:
+      - dev-python
+      
+# IntelliJ Node.JS      
+- name: Install Node.js
+  include_role: 
+    name: geerlingguy.nodejs
+  tags:
+      - dev-nodejs

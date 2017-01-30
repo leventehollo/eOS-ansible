@@ -9,31 +9,40 @@
   command: test -f {{chrome_apt_file}}
   register: google_apt_exists
   ignore_errors: True
+  tags:
+    - chrome
 
 - name: Add Google Chrome key
   shell: wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add -
   when: google_apt_exists.rc == 1
+  tags:
+    - chrome
 
 - name: Add Google Chrome repo
   copy: content="deb http://dl.google.com/linux/chrome/deb/ stable main" dest={{chrome_apt_file}} owner=root group=root mode=644
   when: google_apt_exists.rc == 1
+  tags:
+    - chrome
 
 - name: Update apt cache
   apt: update_cache=yes
   when: google_apt_exists.rc == 1
+  tags:
+    - chrome
 
 - name: Install Google Chrome
   apt: pkg=google-chrome-stable state=installed
+  tags:
+    - chrome
 
   #todo "Download Freya Theme for Chrome: https://chrome.google.com/webstore/detail/freya-theme-for-google-ch/nofpaaefcomkhdkeihhnonlmhajfadgd"
   #todo "Download Scrollbars for Chrome: https://chrome.google.com/webstore/detail/elementary-freya-scrollba/dddhhloahgkhcaipmkfjngdalegmcomm"
 
-- name: Install Google Chrome
-  apt: pkg=google-chrome-stable state=installed
-
 #Firefox
 - name: Install Mozilla Firefox
   apt: pkg=google-chrome-stable state=installed
+  tags:
+    - firefox
 
 #Vivaldi
 
@@ -42,14 +51,21 @@
   register: vivaldi_deb_check
   failed_when: vivaldi_deb_check.rc > 1
   changed_when: vivaldi_deb_check.rc == 1
+  tags:
+    - vivaldi
 
 - name: Download Vivaldi
   get_url:
     url="https://downloads.vivaldi.com/stable/{{vivaldi_deb_filename}}"
-    dest="/home/lev/Downloads/vivaldi.deb"
+    dest="/home/lev/Downloads/{{vivaldi_deb_filename}}"
   when: vivaldi_deb_check.rc == 1
+  tags:
+    - vivaldi
 
 - name: Install Vivaldi
   apt: deb="/home/lev/Downloads/{{vivaldi_deb_filename}}"
   sudo: true
   when: vivaldi_deb_check.rc == 1
+  tags:
+    - vivaldi
+

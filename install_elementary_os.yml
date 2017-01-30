@@ -1,9 +1,43 @@
 ---
-- hosts: localhost
+- name: Playbook for basic linux environment
+  hosts: localhost
+  connection: local
+  gather_facts: yes
+  become: yes
+  become_method: sudo
+  roles:
+    - basic
+    - { role: nvidia, tags: ['nvidia']}
+    - { role: elementary_os, tags: ['elementaryOS']}    
+
+- name: Playbook for common tools
+  hosts: localhost
+  connection: local
+  gather_facts: yes
+  become: yes
+  become_method: sudo
+  roles:    
+    - browsers    
+    - office    
+
+- name: Playbook for development environments
+  hosts: localhost
+  connection: local
+  gather_facts: yes
+  #become: yes
+  #become_method: sudo
+  tags: 
+    - dev
+  roles:        
+    - sublime-text
+    - development
+
+
+- name: Playbook for Nokia environment
+  hosts: localhost
   connection: local
   gather_facts: no
-  sudo: yes
-  roles:
-    #- basic
-    #- elementary_os
-    - browsers
+  become: yes
+  become_method: sudo
+#  roles:
+    

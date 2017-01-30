@@ -1,0 +1,65 @@
+---
+# SublimeText 3
+
+- name: Add PPA repo for Sublimetext 3
+  apt_repository: repo='ppa:webupd8team/sublime-text-3'
+  tags:
+    - sublimetext
+
+- name: Install Sublimetext 3
+  apt: name=sublime-text-installer state=latest
+  tags:
+    - sublimetext
+
+# LibreOffice
+
+- name: Add PPA repo for LibreOffice
+  apt_repository: repo='ppa:libreoffice/ppa'
+  tags:
+    - libreoffice
+
+- name: Install LibreOffice
+  apt: name=libreoffice state=latest
+  tags:
+    - libreoffice
+
+# AcrobatReader
+
+- name: Check if AcrobatReader is installed
+  command: dpkg-query -W {{acrobat_deb_filename}}
+  register: acrobat_deb_check
+  failed_when: acrobat_deb_check.rc > 1
+  changed_when: acrobat_deb_check.rc == 1
+  tags:
+    - acrobat
+
+- name: Download AcrobatReader
+  get_url:
+    url="http://ardownload.adobe.com/pub/adobe/reader/unix/9.x/9.5.5/enu/{{acrobat_deb_filename}}"
+    dest="/home/lev/Downloads/{{acrobat_deb_filename}}"
+  when: acrobat_deb_check.rc == 1
+  tags:
+    - acrobat
+
+- name: Install AcrobatReader
+  apt: deb="/home/lev/Downloads/{{acrobat_deb_filename}}"
+  sudo: true
+  when: acrobat_deb_check.rc == 1
+  tags:
+    - acrobat
+
+# yED
+
+- name: Download yED
+  get_url:
+    url="{{yed_sh_url}}"
+    dest="/home/lev/Downloads/yed.sh"
+  tags:
+    - yed
+
+- name: Install yED
+  shell: yed.sh >> yed_install.log
+  args:
+    chdir: /home/lev/Downloads/
+  tags:
+    - yed

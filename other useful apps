@@ -1,0 +1,144 @@
+Elegant Gnome
+------------------
+sudo add-apt-repository ppa:elegant-gnome/ppa
+sudo apt-get install elegant-gnome
+
+sudo
+------------------
+Conky apt-get install conky-all
+sudo apt-get install conky curl lm-sensors hddtemp
+
+
+Themes
+------------------
+sudo add-apt-repository ppa:numix/ppa && sudo apt-get update && sudo apt-get install numix-plank-theme
+
+Telegram
+------------------
+sudo add-apt-repository ppa:atareao/telegram
+sudo apt-get install telegram
+
+Copy.com
+-------------------
+sudo add-apt-repository ppa:paolorotolo/copy
+sudo apt-get install copy
+
+FB messenger
+-------------------
+sudo add-apt-repository ppa:nilarimogard/webupd8
+sudo apt-get update && apt-get install fbmessenger
+
+Viber
+-------------------
+http://download.cdn.viber.com/cdn/desktop/Linux/viber.deb
+
+
+Multiple Plank
+-------------------
+mkdir ~/.config/plank/dock2
+cd ~/.config/plank/dock2
+cp -a ../dock1/settings .
+ln -s ../dock1/launchers
+Edit the new settings file and change the Monitor=1/2/-1 to whatever.
+gsettings set org.pantheon.cerbere monitored-processes ['wingpanel', 'plank -n dock1 & plank -n dock2', 'slingshot-launcher --silent']
+
+- Duplicated icons
+http://www.keyables.com/2014/08/fix-duplicate-google-chrome-icon-in-elementary-os-plank.html
+
+
+Box
+-------
+http://www.maketecheasier.com/auto-mount-box-net-to-linux-desktop/
+sudo apt-get install davfs2
+sudo adduser lev davfs2
+mkdir ~/Box
+mkdir ~/.davfs2
+cp /etc/davfs2/davfs2.conf ~/.davfs2
+echo "use_locks    0" >> ~/.davfs2/davfs2.conf
+echo "ttps://www.box.com/dav     hollo.levente@gmail.com    \"Lev86dt\"" >> ~/.davfs2/secrets
+chmod 600 ~/.davfs2/secrets
+
+Next, open the davfs2.conf file (in the .davfs2 folder) with a text editor. Scroll down the list until you find the entry (at around line 24):
+#ignore_home       kernoops,distccd  # system wide config file only
+secrets         ~/.davfs2/secrets # user config file onl
+sudo nano /etc/fstab
+https://www.box.com/dav /home/your-username/Box         davfs rw,user,noauto 0 0
+mount ~/Box
+
+
+Lid close
+------------
+org.gnome.settings-daemon.plugins.power lid-close-ac-action
+percentage-critical, percentage-action 5
+buttons...
+
+
+Pixeluvo
+
+Viewnior
+--------
+sudo add-apt-repository ppa:desdelinux/viewnior
+sudo apt-get update
+sudo apt-get install viewnior
+
+
+Files
+-------------
+org.pantheon.files.preferences single-click false
+
+
+Inotify Watcher Limit
+---------------
+sudo echo fs.inotify.max_user_watches = 524288 >> /etc/sysctl.conf 
+sudo sysctl -p
+
+
+Screencast
+---------------
+sudo add-apt-repository ppa:fossfreedom/byzanz
+sudo apt-get update && sudo apt-get install byzanz
+
+sudo add-apt-repository ppa:maarten-baert/simplescreenrecorder
+sudo apt-get update && sudo apt-get install simplescreenrecorder
+
+ZSH
+--------------
+sudo apt-get update && sudo apt-get install -y curl vim git zsh
+curl -L https://github.com/robbyrussell/oh-my-zsh/raw/master/tools/install.sh | bash
+sudo chsh -s $(which zsh) $(whoami)
+
+
+gradle-hez SDK
+-------------
+curl -s http://get.sdkman.io | bash
+
+Chrome notification as system notification
+gsettings set org.pantheon.desktop.gala.notifications apps "$(gsettings get org.pantheon.desktop.gala.notifications apps | sed -e "s/]$/, 'Google Chrome:show,on']/")"
+
+notification system:
+---------------------
+sudo apt-get install zenity
+
+Httpie, lcdiff
+http://zeroturnaround.com/rebellabs/5-command-line-tools-you-should-be-using/
+
+Sublime
+------------
+sudo add-apt-repository ppa:webupd8team/sublime-text-3
+sudo apt-get update
+sudo apt-get install sublime-text-installer
+
+
+Python
+---------------
+sudo apt-get install python-pip python-tox libpython2.7-dev libpython3.4-dev 
+
+
+https://update.send-anywhere.com/linux_downloads/sendanywhere_latest_amd64.deb
+
+
+sdkman
+-----------
+curl -s "https://get.sdkman.io" | bash
+source "$HOME/.sdkman/bin/sdkman-init.sh"
+sdk install groovy

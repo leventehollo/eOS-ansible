@@ -1,0 +1,19 @@
+---
+- name: Add PPA repo for Moka icon set
+  apt_repository: repo='ppa:moka/stable'
+
+- name: Install Moka icon themes
+  apt: name={{item}} state=latest
+  with_items:
+    - plank-theme-orchis
+    - moka-icon-theme
+    - faba-icon-theme
+
+- name: Add PPA repo for Numix icon set
+  apt_repository: repo='ppa:numix/ppa'
+
+- name: Install Numix icon themes
+  apt: name={{item}} state=latest
+  with_items:
+    - numix-icon-theme
+

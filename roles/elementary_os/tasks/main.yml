@@ -3,7 +3,7 @@
   apt: update_cache=yes cache_valid_time=86400
 
 - name: Add PPA repo for Elementary Tweaks
-  apt_repository: repo='ppa:mpstark/elementary-tweaks-daily'
+  apt_repository: repo='ppa:philip.scott/elementary-tweaks'
 - name: Install Elementary Tweaks
   apt: name=elementary-tweaks state=latest
 
@@ -13,24 +13,6 @@
     - midori-granite
     - pantheon-files
   ignore_errors: True
-
-- name: Add PPA repo for Moka icon set
-  apt_repository: repo='ppa:moka/stable'
-
-- name: Install Moka icon themes
-  apt: name={{item}} state=latest
-  with_items:
-    - plank-theme-orchis
-    - moka-icon-theme
-    - faba-icon-theme
-
-- name: Add PPA repo for Numix icon set
-  apt_repository: repo='ppa:numix/ppa'
-
-- name: Install Numix icon themes
-  apt: name={{item}} state=latest
-  with_items:
-    - numix-icon-theme
 
 - name: Configure workspaces
   gsetting: user=lev
@@ -44,20 +26,20 @@
 
 - name: Check if indicator-workspaces_0.5_all is installed
   command: dpkg-query -W indicator-workspaces_0.5_all
-  register: vagrant_check_deb
-  failed_when: vagrant_check_deb.rc > 1
-  changed_when: vagrant_check_deb.rc == 1
+  register: indicator_check_deb
+  failed_when: indicator_check_deb.rc > 1
+  changed_when: indicator_check_deb.rc == 1
 
 - name: Download indicator-workspaces_0.5_all.deb
   get_url:
     url="https://github.com/dyson/indicator-workspaces/releases/download/v0.5/indicator-workspaces_0.5_all.deb"
     dest="/home/lev/Downloads/indicator-workspaces_0.5_all.deb"
-  when: vagrant_check_deb.rc == 1
+  when: indicator_check_deb.rc == 1
 
 - name: Install indicator-workspaces_0.5_all
   apt: deb="/home/lev/Downloads/indicator-workspaces_0.5_all.deb"
   sudo: true
-  when: vagrant_check_deb.rc == 1
+  when: indicator_check_deb.rc == 1
 
 - name: Install Numix icon themes
   apt: name={{item}} state=latest
@@ -164,6 +146,8 @@
     - ['org.gnome.desktop.interface.monospace-font-name', 'Droid Sans Mono 8']
     - ['org.gnome.desktop.interface.document-font-name', 'Open Sans 8']
     - ['org.gnome.SessionManager.auto-save-session', 'true']
+    - ['org.gnome.desktop.peripherals.touchpad.tap-to-click', 'true']
+    - ['org.gnome.desktop.peripherals.touchpad.natural-scroll', 'false']
 
 - name: Configure Files App
   gsetting: user=lev
@@ -175,7 +159,7 @@
     - ['org.pantheon.files.preferences.default-viewmode', 'list']
     - ['org.pantheon.files.preferences.restore-tabs', 'true']
     - ['org.pantheon.files.preferences.single-click', 'false']
-    - ['org.gtk.Settings.FileChooser.sort-directories-first', ''true]
+    - ['org.gtk.Settings.FileChooser.sort-directories-first', 'true']
 
 - name: Configure Shotwell
   gsetting: user=lev
@@ -183,7 +167,7 @@
             value={{item[1]}}
   with_items:
     - ['org.yorba.shotwell.preferences.editing.external-photo-editor', 'gimp']
-    - ['org.yorba.shotwell.preferences.editing.external-raw-editor, 'rawtherapee']
+    - ['org.yorba.shotwell.preferences.editing.external-raw-editor', 'rawtherapee']
 
 - name: Configure Key bindings
   gsetting: user=lev
@@ -193,5 +177,5 @@
     - ['org.gnome.desktop.wm.keybindings begin-move', '[]']
     - ['org.gnome.desktop.wm.keybindings begin-resize', '[]']
     - ['org.gnome.desktop.wm.keybindings cycle-group', '[]']
-    - ['org.gnome.desktop.wm.keybindings cycle-windows', '']
-    - ['org.gnome.desktop.wm.keybindings cycle-panels', '']
+    - ['org.gnome.desktop.wm.keybindings cycle-windows', '[]']
+    - ['org.gnome.desktop.wm.keybindings cycle-panels', '[]']

@@ -1,0 +1,5 @@
+---
+sublimetext_packagecontrol_packages:
+      - "AutoFileName"      
+      - "Terminal"
+sublimetext_packagecontrol_dir_bin: "~/.config/sublime-text-3/Installed\ Packages"      

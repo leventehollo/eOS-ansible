@@ -9,7 +9,7 @@
   ignore_errors: True
 
 - name: Install pre-requisite packages
-  apt: name={{item}} state=latest allow_unauthenticated=yes  
+  apt: name={{item}} state=latest #allow_unauthenticated=yes  
   with_items:
     - python-pycurl
 
@@ -19,7 +19,8 @@
     - guake
     - gparted
     - unetbootin
-    - axel
+    - axel #Axel is a program that downloads a file from a FTP or HTTP server through multiple connection.
+    - software-properties-common
 
 - name: Add PPA repository for Aptik
   apt_repository: repo='ppa:teejee2008/ppa'

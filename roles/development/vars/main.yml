@@ -1,0 +1,5 @@
+---
+java_home: "/usr/lib/jvm/java-8-openjdk-amd64"
+intellij_default_jdk_home: "/usr/lib/jvm/java-8-openjdk-amd64"
+intellij_default_jdk: '1.8'
+intellij_default_maven_home: "/opt/maven/apache-maven-3.3.9"

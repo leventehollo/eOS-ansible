@@ -1,0 +1,20 @@
+---
+# SublimeText 3
+
+- name: Add PPA repo for Sublimetext 3
+  apt_repository: repo='ppa:webupd8team/sublime-text-3'
+  tags:
+    - sublimetext
+
+- name: Install Sublimetext 3
+  apt: name=sublime-text-installer state=latest
+  tags:
+    - sublimetext
+
+- name: Install Sublimetext plugins
+  include_role:
+    name: igor_mukhin.sublimetext3_packagecontrol
+    vars:
+      packagecontrol_dir_bin: "{{sublimetext_packagecontrol_dir_bin}}"
+      packagecontrol_packages: "{{sublimetext_packagecontrol_packages}}"
+      

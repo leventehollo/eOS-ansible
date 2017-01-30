@@ -1,0 +1,857 @@
+#!/bin/bash
+
+#Elementary OS
+INSTALL_TWEAKS=true;			#Elementary Tweaks
+REMOVE_MIDORI=true;
+REMOVE_PANTHEON_FILES=true;
+INSTALL_MOKA=true;
+INSTALL_NUMIX=true;
+INSTALL_INDICATORS=true;
+CONFIGURE_DYNAMIC_WORKSPACES=true;
+CONFIGURE_WORKSPACES_ONLY_ON_PRIMARY=true;
+INSTALL_APTIK=true;				#Aptik backup tool
+
+#Configuration
+CONFIGURE_NVIDIA=true;
+INSTALL_GCONF=true;				#gConf configuration editor
+INSTALL_DCONF=true;				#dconf configuration editor
+
+#Browsers
+INSTALL_CHROME=true;			#Google Chrome Browser
+INSTALL_FIREFOX=true;			#Mozilla Firefox
+
+#Office
+INSTALL_SUBLIMETEXT=true;		#SublimeText2
+INSTALL_LIBREOFFICE=true;		#LibreOffice
+INSTALL_ACROBAT=true;			#AcrobatReader
+
+#Development
+INSTALL_ORACLE_JAVA8=false;		#Oracle Java 8
+INSTALL_OPENJDK_7=true; 		#OpenJDK 7
+INSTALL_GRADLE=true;            #Gradle
+INSTALL_MAVEN=true;             #Maven
+
+#Messaging
+INSTALL_PIDGIN=true;			#IM
+INSTALL_SKYPE=true;				#IM
+INSTALL_BIRDIE=true;			#twitter client
+
+#Music & Video
+INSTALL_CODECS=true;			#codecs for music and video players
+INSTALL_VOCAL=true;				#podcast app
+INSTALL_VLC=true;				#VLC player
+INSTALL_MINITUBE=false;			#Minitube youtube player
+INSTALL_MUSIQUE=false;			#Musique music player
+INSTALL_SPOTIFY=true;			#Spotify
+
+#Photo&Graphics
+INSTALL_GIMP=true;				#Gimp editor
+INSTALL_YED=true;				#yED diagram editor
+INSTALL_LIGHTZONE=true;			#Lighzone RAW photo editor
+INSTALL_RAWTHERAPEE=true		#RawTherapee RAW photo editor
+INSTALL_DARKTABLE=false;		#Darktable RAW photo editor
+
+#Other Apps
+INSTALL_IPAD_CHARGE=true;		#ipad charge service
+INSTALL_GUAKE=true				#Guake terminal
+INSTALL_CLIPIT=true;			#clipIt clipboard manager
+INSTALL_PCKG_MANAGERS=true;		#Package managers: aptitude, synaptic
+INSTALL_ARCHIVE_FORMATS=true;	#common archive formats
+INSTALL_UGET=true;				#uGet and aria2 download managers
+
+
+#Cloud & Virtualization
+INSTALL_DROPBOX=true;			#Dropbox
+INSTALL_COPY=true;
+INSTALL_VIRTUALBOX=true			#VirtualBox
+
+#Nokiao
+INSTALL_CISCOVPN=true;			#Cisco VPN
+INSTALL_WEBEX=true;				#WebEx
+INSTALL_WEBMAIL_LAUNCHER=true;	#Webmail to docker
+
+
+
+#################################################################################
+
+# Build package list will be installed
+
+PACKAGES_TO_BE_INSTALLED="";
+PACKAGES_TO_BE_REMOVED="";
+TODO=();
+
+#################################################################################
+
+RCol='\033[0m'
+
+# Regular           Bold                Underline           High Intensity      BoldHigh Intens     Background          High Intensity Backgrounds
+Bla='\e[0;30m';     BBla='\e[1;30m';    UBla='\e[4;30m';    IBla='\e[0;90m';    BIBla='\e[1;90m';   On_Bla='\e[40m';    On_IBla='\e[0;100m';
+Red='\e[0;31m';     BRed='\e[1;31m';    URed='\e[4;31m';    IRed='\e[0;91m';    BIRed='\e[1;91m';   On_Red='\e[41m';    On_IRed='\e[0;101m';
+Gre='\e[0;32m';     BGre='\e[1;32m';    UGre='\e[4;32m';    IGre='\e[0;92m';    BIGre='\e[1;92m';   On_Gre='\e[42m';    On_IGre='\e[0;102m';
+Yel='\e[0;33m';     BYel='\e[1;33m';    UYel='\e[4;33m';    IYel='\e[0;93m';    BIYel='\e[1;93m';   On_Yel='\e[43m';    On_IYel='\e[0;103m';
+Blu='\e[0;34m';     BBlu='\e[1;34m';    UBlu='\e[4;34m';    IBlu='\e[0;94m';    BIBlu='\e[1;94m';   On_Blu='\e[44m';    On_IBlu='\e[0;104m';
+Pur='\e[0;35m';     BPur='\e[1;35m';    UPur='\e[4;35m';    IPur='\e[0;95m';    BIPur='\e[1;95m';   On_Pur='\e[45m';    On_IPur='\e[0;105m';
+Cya='\e[0;36m';     BCya='\e[1;36m';    UCya='\e[4;36m';    ICya='\e[0;96m';    BICya='\e[1;96m';   On_Cya='\e[46m';    On_ICya='\e[0;106m';
+Whi='\e[0;37m';     BWhi='\e[1;37m';    UWhi='\e[4;37m';    IWhi='\e[0;97m';    BIWhi='\e[1;97m';   On_Whi='\e[47m';    On_IWhi='\e[0;107m';
+
+function resetcolor() {
+	echo -e "$RCol"
+}
+
+function h1() {
+	echo ""
+	echo -e "${BYel}------------------------"
+	echo -e " $1";
+	echo -e "------------------------"
+	echo -e ""
+	resetcolor
+}
+
+function bullet() {
+	echo -e "${Blu}*** $1"
+	resetcolor
+}
+
+function skip() {
+	echo -e "${Gre}* Skipping $1"
+	resetcolor
+}
+
+function h2() {
+	echo -e "${BGre}"
+	echo -e "[ $1 ]"
+	resetcolor
+}
+
+function to_be_removed() {
+	PACKAGES_TO_BE_REMOVED="$PACKAGES_TO_BE_REMOVED $1"
+}
+
+function to_be_installed() {
+	PACKAGES_TO_BE_INSTALLED="$PACKAGES_TO_BE_INSTALLED $1"
+}
+
+function todo() {
+	TODO=("${TODO[@]}", "$1")
+}
+
+function add_repo() {
+	add-apt-repository -y $1
+    echo "Repository $1 added"
+}
+
+function apply_changes() {
+    h1 "Installing"
+    h2 "Packages to be removed: "
+    echo -e "${IRed} $PACKAGES_TO_BE_REMOVED"
+    resetcolor
+    apt-get remove $PACKAGES_TO_BE_REMOVED
+
+    h2 "Update & Upgrade System"
+    apt-get update
+
+    h2 "Packages to be installed: "
+    echo -e "${IRed} $PACKAGES_TO_BE_INSTALLED"
+    resetcolor
+    apt-get install $PACKAGES_TO_BE_INSTALLED
+}
+
+function cleanup() {
+    h2 "APT is going to be cleaned up"
+    read x
+    apt-get autoremove
+    apt-get autoclean
+    PACKAGES_TO_BE_INSTALLED=""
+    PACKAGES_TO_BE_REMOVED=""
+}
+
+function return_to_menu() {
+    h2 "Press any key to return to the Menu"
+    read x
+}
+
+#################################################################################
+resetcolor
+
+clear
+
+ERR_MSG=""
+
+while :
+do
+	# If error exists, display it
+	if [ "$ERR_MSG" != "" ]; then
+		echo "Error: $ERR_MSG"
+		echo ""
+	fi
+
+	# Write out the menu options...
+
+	echo "Select an option:"
+	echo " * 0: General stuffs"
+	echo " * 1: Elementary OS tweaks"
+	echo " * 2: System Settings (video driver etc.)"
+	echo " * 3: Browsers"
+	echo " * 5: Development"
+   	echo " * 6: Messaging"
+	echo " * 7: Music & Video"
+	echo " * 8: Photo Editing & Graphics"
+	echo " * 9: Cloud & Virtualization"
+	echo " * 10: Other Useful Apps"
+	echo " * 11: Nokia"
+    echo " * 4: Office"
+
+	# Clear the error message
+	ERR_MSG=""
+
+	# Read the user input
+	read SEL
+
+	case $SEL in
+		0) h1 "General";
+            h2 "Support for archive formats"
+            to_be_installed "unace rar unrar p7zip-rar p7zip sharutils uudeview mpack arj cabextract lzip lunzip"
+            h2 "Package management tools"
+            to_be_installed "aptitude synaptic gdebi-core"
+            h2 "Clipboard manager"
+            to_be_installed "clipit"
+            h2 "System Monitoring tools"
+            to_be_installed "htop cpufrequtils gnome-system-monitor guake gnome-screensaver"
+            h2 "Other tools"
+            to_be_installed "menulibre axel unetbootin gparted guake mc"
+            if [ $INSTALL_IPAD_CHARGE = true ]
+            then
+	            h2 "iPad charge tool"
+	            add_repo "ppa:heathbar/ipad-charge"
+	            to_be_installed "libusb-1.0-0 ipad-charge"
+            fi
+
+            ITEM="GConf Editor"
+            if [ $INSTALL_GCONF = true ]
+            then
+	            h2 $ITEM
+	            to_be_installed "gconf-editor"
+	            bullet "$ITEM will be installed"
+            else
+	            skip $ITEM
+            fi
+
+            ITEM="DConf Editor"
+            if [ $INSTALL_DCONF = true ]
+            then
+	            h2 $ITEM
+	            to_be_installed "dconf-editor"
+	            bullet "$ITEM will be installed"
+            else
+	            skip $ITEM
+            fi
+
+            apply_changes
+
+            if [ $INSTALL_DCONF = true ]
+            then
+                h2 $ITEM
+                to_be_installed "dconf-editor"
+                bullet "$ITEM will be installed"
+            else
+                skip $ITEM
+            fi
+
+            cleanup
+            return_to_menu
+            ;;
+		1) h1 "Elementary OS";
+            ITEM="Elementary Tweaks"
+            if [ $INSTALL_TWEAKS = true ]
+            then
+	            h2 $ITEM
+	            bullet "Adding $ITEM repo (For more information, visit http://lmelinux.net/elementary-tweaks)";
+	            add_repo "ppa:mpstark/elementary-tweaks-daily"
+	            to_be_installed "elementary-tweaks"
+	            bullet "$ITEM browser will be installed"
+            else
+	            skip $ITEM
+            fi
+
+
+            ITEM="Midori Web Browser"
+            if [ $REMOVE_MIDORI = true ]
+            then
+	            h2 $ITEM
+	            to_be_removed "midori-granite"
+	            bullet "$ITEM wil be removed"
+            else
+	            skip $ITEM
+            fi
+
+            ITEM="Pantheon File Browser"
+            if [ $REMOVE_PANTHEON_FILES = true ]
+            then
+	            h2 $ITEM
+	            to_be_removed "pantheon-files"
+	            bullet "$ITEM wil be removed"
+            else
+	            skip $ITEM
+            fi
+
+            ITEM="Aptik"
+            if [ $INSTALL_APTIK = true ]
+            then
+	            h2 $ITEM
+	            bullet "Adding $ITEM repo"
+	            add_repo "ppa:teejee2008/ppa"
+	            to_be_installed "aptik"
+	            bullet "$ITEM wil be removed"
+            else
+	            skip $ITEM
+            fi
+
+
+            if [ $CONFIGURE_DYNAMIC_WORKSPACES = true ]
+            then
+	            gsettings set org.gnome.mutter dynamic-workspaces true
+	            bullet "Dynamic workspaces: active"
+	            gsettings set org.gnome.mutter workspaces-only-on-primary true
+	            bullet "Workspaces only on primary screen: active"
+            else
+	            skip $ITEM
+            fi
+
+            ITEM="Moka Icon Theme"
+            if [ $INSTALL_MOKA = true ]
+            then
+	            h2 $ITEM
+	            bullet "Adding $ITEM repo"
+	            add_repo "ppa:moka/stable"
+	            to_be_installed "plank-theme-orchis moka-icon-theme faba-icon-theme"
+	            bullet "$ITEM will be installed"
+            else
+	            skip $ITEM
+            fi
+
+            ITEM="Numix Icon Theme"
+            if [ $INSTALL_MOKA = true ]
+            then
+	            h2 $ITEM
+	            bullet "Adding $ITEM repo"
+	            add_repo "ppa:numix/ppa"
+	            to_be_installed "numix-icon-theme-circle"
+	            bullet "$ITEM - (Shine and Circle) will be installed"
+            else
+	            skip $ITEM
+            fi
+
+            ITEM="Indicators"
+            if [ $INSTALL_INDICATORS = true ]
+            then
+	            h2 $ITEM
+	            bullet "Installing Workspace Indicator"
+	            wget https://github.com/dyson/indicator-workspaces/releases/download/v0.5/indicator-workspaces_0.5_all.deb
+	            dpkg -i indicator-workspaces_*.deb
+	            to_be_installed "indicator-cpufreq"
+	            #bullet "CPU frequency Indicator will be installed"
+	            #add_repo "ppa: yunnxx / gnome3"
+	            #to_be_installed "indicator-usb"
+	            #bullet "USB Indicator will be installed"
+	            to_be_installed "indicator-multiload"
+	            #bullet "Multiload Indicator will be installed"
+
+
+            else
+	            skip $ITEM
+            fi
+
+            apply_changes
+            cleanup
+
+            #Configuration
+            h1 "Configuration"
+            ITEM="Indicators"
+            if [ $INSTALL_INDICATORS = true ]
+            then
+                h2 $ITEM
+                bullet "Configuring Session Indicator"
+                gsettings set com.canonical.indicator.session show-real-name-on-panel false
+                gsettings set com.canonical.indicator.session suppress-logout-menuitem false
+                gsettings set com.canonical.indicator.session suppress-logout-restart-shutdown true
+                gsettings set com.canonical.indicator.session suppress-restart-menuitem false
+                gsettings set com.canonical.indicator.session suppress-shutdown-menuitem false
+                gsettings set com.canonical.indicator.session user-show-menu true
+
+                bullet "Configuring Workspaces Indicator"
+                gsettings set apps.indicator-workspaces show-label false
+
+                bullet "Configuring Multiload Indicator"
+                gsettings set de.mh21.indicator.multiload.general autostart true
+                gsettings set de.mh21.indicator.multiload.graphs.cpu enabled true
+                gsettings set de.mh21.indicator.multiload.graphs.disk enabled true
+                gsettings set de.mh21.indicator.multiload.graphs.mem enabled true
+                gsettings set de.mh21.indicator.multiload.graphs.swap enabled true
+                gsettings set de.mh21.indicator.multiload.general system-monitor gnome-system-monitor
+
+                bullet "Configuring DateTime Indicator"
+                gsettings set com.canonical.indicator.datetime show-calendar true
+                gsettings set com.canonical.indicator.datetime show-clock true
+                gsettings set com.canonical.indicator.datetime show-date true
+                gsettings set com.canonical.indicator.datetime show-day true
+                gsettings set com.canonical.indicator.datetime show-events true
+                gsettings set com.canonical.indicator.datetime show-locations true
+                gsettings set com.canonical.indicator.datetime show-seconds true
+                gsettings set com.canonical.indicator.datetime show-week-numbers true
+                gsettings set com.canonical.indicator.datetime show-year true
+
+                bullet "Configuring Power Indicator"
+                gsettings set com.canonical.indicator.power show-percentage true
+                gsettings set com.canonical.indicator.power show-time true
+
+                bullet "Configuring Sound Indicator"
+                gsettings set com.canonical.indicator.sound global-mute true
+
+                bullet "Configuring Ubuntu"
+                gsettings set com.ubuntu.update-notifier show-apport-cashes false
+
+                bullet "Appearance"
+                gsettings set org.pantheon.desktop.gala.appearance alt-tab-window-opacity 0.3
+                gsettings set org.pantheon.desktop.gala.appearance button-layout "close:minimize,maximize"
+                gsettings set org.pantheon.desktop.gala.behavior dynamic-workspaces true
+                gsettings set org.pantheon.desktop.gala.behavior hotcorner-topleft "window-overview-all"
+                gsettings set org.pantheon.desktop.gala.behavior hotcorner-topright "show-workspace-view"
+                gsettings set org.pantheon.desktop.wingpanel auto-adjust-alpha false
+                gsettings set org.pantheon.desktop.wingpanel background-alpha 0.0
+                gsettings set org.pantheon.desktop.wingpanel show-launcher false
+
+                bullet "Interface"
+                gsettings set org.gnome.desktop.background show-desktop-icons false
+                gsettings set org.gnome.desktop.interface clock-format 24h
+                gsettings set org.gnome.desktop.interface clock-show-date true
+                gsettings set org.gnome.desktop.interface clock-show-seconds true
+                gsettings set org.gnome.desktop.interface cursor-theme "whiteglass"
+                gsettings set org.gnome.desktop.interface cursor-blink-time 600
+                gsettings set org.gnome.desktop.interface font-name "Droid Sans 8"
+                gsettings set org.gnome.desktop.interface gtk-theme "elementary"
+                gsettings set org.gnome.desktop.interface icon-theme "Numix-Bevel"
+                gsettings set org.gnome.desktop.interface monospace-font-name "Droid Sans Mono 8"
+                gsettings set org.gnome.desktop.interface document-font-name "Open Sans 8"
+                gsettings set org.gnome.SessionManager auto-save-session true
+
+                bullet "Files App"
+                gsettings set org.pantheon.files.list-view zoom-level smallest
+                gsettings set org.pantheon.files.preferences date-format iso
+                gsettings set org.pantheon.files.preferences default-viewmode list
+                gsettings set org.pantheon.files.preferences restore-tabs true
+                gsettings set org.pantheon.files.preferences single-click false
+                gsettings set org.gtk.Settings.FileChooser sort-directories-first true
+
+                bullet "Shotwell"
+                gsettings set org.yorba.shotwell.preferences.editing external-photo-editor gimp
+                gsettings set org.yorba.shotwell.preferences.editing external-raw-editor rawtherapee
+
+                bullet "Key bindings"
+                gsettings set org.gnome.desktop.wm.keybindings begin-move "[]"
+                gsettings set org.gnome.desktop.wm.keybindings begin-resize "[]"
+                gsettings set org.gnome.desktop.wm.keybindings cycle-group "[]"
+                gsettings set org.gnome.desktop.wm.keybindings cycle-windows "[]"
+                gsettings set org.gnome.desktop.wm.keybindings cycle-panels "[]"
+            fi
+
+            return_to_menu
+            ;;
+		2) h1 "System Settings"
+            if [ $CONFIGURE_NVIDIA = true ]
+            then
+	            h2 "Configure nVidia"
+	            to_be_removed "light-locker light-locker-settings"
+	            bullet "light-locker to be removed"
+	            to_be_installed "xscreensaver nvidia-settings"
+	            bullet "nvidia-settings xscreensaver will be installed"
+
+	            cat >/usr/share/X11/xorg.conf.d/10-nvidia-brightness.conf <<EOF
+	            Section "Device"
+                	Identifier     "Device0"
+                	Driver         "nvidia"
+                	VendorName     "NVIDIA Corporation"
+                	BoardName      "Quadro K1000M"
+                	Option         "RegistryDwords" "EnableBrightnessControl=1"
+	            EndSection
+EOF
+            bullet "nVidia brightness xorg conf created (/usr/share/X11/xorg.conf.d/10-nvidia-brightness.conf)"
+            else
+	            skip "nVidia configuration"
+            fi
+
+            apply_changes
+            cleanup
+            ;;
+		3) h1 "Browsers"
+            ITEM="Google Chrome Browser"
+            if [ $INSTALL_CHROME = true ]
+            then
+	            h2 $ITEM
+	            wget -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add -
+	            bullet "Adding $ITEM repo"
+	            sh -c 'echo "deb http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google.list'
+	            to_be_installed "google-chrome-stable"
+	            bullet "$ITEM will be installed"
+	            todo "Download Freya Theme for Chrome: https://chrome.google.com/webstore/detail/freya-theme-for-google-ch/nofpaaefcomkhdkeihhnonlmhajfadgd"
+	            todo "Download Scrollbars for Chrome: https://chrome.google.com/webstore/detail/elementary-freya-scrollba/dddhhloahgkhcaipmkfjngdalegmcomm"
+            else
+	            skip $ITEM
+            fi
+
+            ITEM="Mozilla Firefox Browser"
+            if [ $INSTALL_FIREFOX = true ]
+            then
+	            h2 $ITEM
+	            to_be_installed "firefox"
+	            bullet "$ITEM will be installed"
+            else
+	            skip $ITEM
+            fi
+
+            apply_changes
+            cleanup
+            return_to_menu
+            ;;
+        4) h1 "Office"
+            ITEM="Sublimetext 2"
+            if [ $INSTALL_SUBLIMETEXT = true ]
+            then
+	            h2 $ITEM
+	            bullet "Adding $ITEM repo"
+	            add_repo "ppa:webupd8team/sublime-text-3"
+	            to_be_installed "sublime-text-installer"
+	            bullet "$ITEM will be installed"
+            else
+	            skip $ITEM
+            fi
+
+            ITEM="LibreOffice"
+            if [ $INSTALL_LIBREOFFICE = true ]
+            then
+	            h2 $ITEM
+	            bullet "Adding $ITEM repo"
+	            add_repo "ppa:libreoffice/ppa"
+	            to_be_installed "libreoffice"
+	            bullet "$ITEM will be installed"
+            else
+	            skip $ITEM
+            fi
+
+            ITEM="AcrobatReader"
+            if [ $INSTALL_ACROBAT = true ]
+            then
+	            h2 $ITEM
+	            wget http://ardownload.adobe.com/pub/adobe/reader/unix/9.x/9.5.5/enu/AdbeRdr9.5.5-1_i386linux_enu.deb
+	            dpkg -i AdbeRdr9*;
+                apt-get -f install
+	            bullet "$ITEM will be installed"
+            else
+	            skip $ITEM
+            fi
+
+            ITEM="yED"
+            if [ $INSTALL_YED = true ]
+            then
+	            h2 $ITEM
+	            bullet "Downloading $ITEM"
+	            wget -O setup_yed.sh http://www.yworks.com/products/yed/demo/yEd-3.12.2_64-bit_setup.sh
+	            bullet "Installing $ITEM"
+	            chmod 755 setup_yed.sh
+	            ./setup_yed.sh
+            else
+	            skip $ITEM
+            fi
+
+            apply_changes
+            cleanup
+            return_to_menu
+            ;;
+        5) h1 "Development"
+            to_be_installed "subversion"
+            bullet "Subversion will be installed"
+
+            ITEM="Oracle Java 8"
+            if [ $INSTALL_ORACLE_JAVA8 = true ]
+            then
+	            h2 $ITEM
+	            bullet "Adding $ITEM repo"
+	            add_repo "ppa:webupd8team/java"
+	            to_be_installed "oracle-java8-installer oracle-java8-set-default"
+	            bullet "$ITEM will be installed"
+            else
+	            skip $ITEM
+            fi
+
+            ITEM="OpenJDK 7"
+            if [ $INSTALL_OPENJDK_7 = true ]
+            then
+	            h2 $ITEM
+	            to_be_installed "openjdk-7-jre openjdk-7-jdk openjdk-7-doc openjdk-7-dbg icedtea-7-plugin openjdk-7-source "
+	            bullet "$ITEM will be installed"
+            else
+	            skip $ITEM
+            fi
+
+            ITEM="Gradle"
+            if [ $INSTALL_GRADLE = true ]
+            then
+	            bullet "Downloading $ITEM"
+	            curl -s get.gvmtool.net | bash
+                source "~/.gvm/bin/gvm-init.sh"
+	            gvm install gradle 2.1
+            else
+	            skip $ITEM
+            fi
+
+            ITEM="Maven"
+            if [ $INSTALL_MAVEN = true ]
+            then
+                h2 $ITEM
+                to_be_installed "maven"
+                bullet "$ITEM will be installed"
+            else
+                skip $ITEM
+            fi
+
+            apply_changes
+            cleanup
+            return_to_menu
+            ;;
+        6) h1 "Messaging"
+            h2 "Instant Messaging"
+            if [ "$INSTALL_PIDGIN" = true ]
+            then
+	            to_be_installed "pidgin pidgin-skype pidgin-blinklight"
+	            bullet "Pidgin will be installed"
+            else
+	            skip "Pidgin"
+            fi
+
+            if [ "$INSTALL_SKYPE" = true ]
+            then
+	            to_be_installed "skype"
+	            bullet "Skype will be installed"
+            else
+	            skip "Skype"
+            fi
+
+            ITEM="Birdie Twitter Client"
+            if [ "$INSTALL_BIRDIE" = true ]
+            then
+	            h2 $ITEM
+	            bullet "Adding $ITEM repo"
+	            add_repo "ppa:birdie-team/stable"
+	            to_be_installed "birdie"
+	            bullet "$ITEM will be installed"
+            else
+	            skip "$ITEM"
+            fi
+
+            apply_changes
+            cleanup
+            return_to_menu
+            ;;
+        7) h1 "Music & Video"
+            if [ $INSTALL_CODECS = true ]
+            then
+                to_be_installed "ubuntu-restricted-extras libav-tools libdvdread4"
+                bullet "Codecs"
+            else
+                skip "Codecs"
+            fi
+
+            if [ $INSTALL_VLC = true ]
+            then
+                to_be_installed "vlc"
+                bullet "VLC Media Player"
+            else                skip "VLC Media Player"
+            fi
+
+            if [ $INSTALL_MINITUBE = true ]
+            then
+                wget http://flavio.tordini.org/files/minitube/minitube64.deb
+                dpkg -i minitube64.deb
+                bullet "Minitube installed"
+            else
+                skip "Minitube"
+            fi
+
+            if [ $INSTALL_MUSIQUE = true ]
+            then
+                wget http://flavio.tordini.org/files/musique/musique64.deb
+                dpkg -i musique64.deb
+                bullet "Musique installed"
+            else
+                skip "Musique"
+            fi
+
+            ITEM="Spotify"
+            if [ $INSTALL_SPOTIFY = true ]
+            then
+                h2 $ITEM
+                bullet "Adding $ITEM repo"
+                sh -c 'echo "deb http://repository.spotify.com stable non-free" >> /etc/apt/sources.list.d/spotify.list'
+                apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 94558F59
+                to_be_installed "spotify-client"
+                bullet "$ITEM will be installed"
+            else
+                skip "$ITEM"
+            fi
+
+            ITEM="Vocal"
+            if [ $INSTALL_VOCAL = true ]
+            then
+                h2 $ITEM
+                bullet "Adding $ITEM repo"
+                add_repo "ppa:nathandyer/vocal-daily"
+                to_be_installed "vocal"
+                bullet "$ITEM will be installed"
+            else
+                skip "$ITEM"
+            fi
+
+            apply_changes
+            cleanup
+            return_to_menu
+            ;;
+        8) h1 "Photo Editing & Graphics"
+            h2 "GIMP"
+            to_be_installed "gimp"
+
+
+            ITEM="Darktable"
+            if [ $INSTALL_DARKTABLE = true ]
+            then
+	            h2 $ITEM
+	            bullet "Adding $ITEM repo"
+	            add_repo "ppa:pmjdebruijn/darktable-release"
+	            to_be_installed "darktable"
+	            bullet "$ITEM will be installed"
+            else
+	            skip "$ITEM"
+            fi
+
+            ITEM="LightZone"
+            if [ $INSTALL_LIGHTZONE = true ]
+            then
+	            h2 $ITEM
+	            bullet "Adding $ITEM repo"
+	            sh -c "echo 'deb http://download.opensuse.org/repositories/home:/ktgw0316:/LightZone/xUbuntu_13.04/ ./' > /etc/apt/sources.list.d/lightzone.list"
+	            wget -O - http://download.opensuse.org/repositories/home:/ktgw0316:/LightZone/xUbuntu_13.04/Release.key | apt-key add -
+	            to_be_installed "lightzone"
+	            bullet "$ITEM will be installed"
+            else
+	            skip "$ITEM"
+            fi
+
+            ITEM="RawTherapee"
+            if [ $INSTALL_RAWTHERAPEE = true ]
+            then
+	            h2 $ITEM
+	            to_be_installed "libraw-bin ufraw ufraw-batch and gimp-ufraw rawtherapee"
+	            bullet "$ITEM will be installed"
+            else
+	            skip "$ITEM"
+            fi
+
+            apply_changes
+            cleanup
+            return_to_menu
+            ;;
+        9) h1 "Cloud & Virtualization"
+            ITEM="Dropbox"
+            if [ $INSTALL_DROPBOX = true ]
+            then
+	            h2 $ITEM
+	            bullet "Adding $ITEM repo"
+	            sh -c 'echo "deb http://linux.dropbox.com/ubuntu/ trusty main" >> /etc/apt/sources.list.d/dropbox.list'
+	            apt-key adv --keyserver pgp.mit.edu --recv-keys 5044912E
+	            to_be_installed "dropbox pantheon-files-plugin-dropbox"
+	            cat "export DROPBOX_USE_LIBAPPINDICATOR=1" >> ~/.xsessionrc
+	            bullet "$ITEM will be installed"
+            else
+	            skip "$ITEM"
+            fi
+
+            ITEM="Virtualbox"
+            if [ $INSTALL_VIRTUALBOX = true ]
+            then
+	            h2 $ITEM
+	            to_be_installed "virtualbox virtualbox-guest-additions-iso virtualbox-guest-dkms virtualbox-guest-utils"
+	            bullet "$ITEM will be installed"
+	            wget http://download.virtualbox.org/virtualbox/4.3.14/Oracle_VM_VirtualBox_Extension_Pack-4.3.14-95030.vbox-extpack
+	            vboxmanage extpack install ./Oracle_VM_VirtualBox_Extension_Pack-*.vbox-extpack
+            else
+	            skip $ITEM
+            fi
+
+            apply_changes
+
+            ITEM="Dropbox"
+            if [ $INSTALL_DROPBOX = true ]
+            then
+	            cd
+	            dropbox stop
+	            rm .dropbox-dist
+	            rm -R .dropbox-dist
+	            rm -R /usr/bin/.dropbox-dist/
+	            rm -R /var/lib/dropbox/.dropbox-dist
+	            dropbox start -i
+            fi
+
+            cleanup
+            return_to_menu
+            ;;
+        10) h2 "Other Useful Apps"
+
+            return_to_menu
+            ;;
+        11) h2 "Nokia"
+            if [ $INSTALL_WEBEX = true ]
+            then
+	            to_be_installed "icedtea-plugin libgtk2.0-0:i386 libgtk2.0-0 libpango1.0-0:i386 libpango1.0-0 libxp6:i386 libxp6 libxp6:i386 libxp6 libxmu6:i386 libxmu6 libxmu6:i386 libxtst6  libxtst6:i386 libxtst6 libstdc++6:i386 libstdc++6 libxv1:i386 libxv1 libasound2:i386 libasound2"
+	            bullet "Packages required for WebEX will be installed"
+            else
+	            skip "WebEX"
+            fi
+
+            if [ $INSTALL_CISCOVPN = true ]
+            then
+	            to_be_installed "vpnc network-manager-vpnc-gnome network-manager-vpnc"
+	            bullet "Cisco VPN"
+            else
+	            skip "Cisco VPN"
+            fi
+
+            apply_changes
+            cleanup
+            return_to_menu
+            ;;
+		*) ERR_MSG="Please enter a valid option!"
+	esac
+
+	# This will clear the screen so we can redisplay the menu.
+	clear
+done
+
+
+#################################################################################
+
+h1 "Summary"
+
+h2 "For complete this setup, please do the following steps manually:"
+for i in "${TODO[@]}" ; do
+	bullet $i
+done
+
+
+#TODO:
+#- open Additional Drivers dialog
+#- open synaptic to umark auto installed packages
+#  sudo dpkg --configure -a
+# sudo apt-get -f install
+# maven transmission install
+
+# ipad-charge
+#ecryptfs-unwrap-passphrase
+#9aeecbc99de47192e67246f4ac33da9f
