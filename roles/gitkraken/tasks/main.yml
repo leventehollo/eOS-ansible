@@ -7,12 +7,12 @@
 
 - name: Download GitKraken
   get_url:
-    url="https://release.gitkraken.com/linux/{{gitkraken_deb_filename.deb}}"
-    dest="~/Downloads/{{gitkraken_deb_filename}}"
+    url="https://release.gitkraken.com/linux/{{gitkraken_deb_filename}}"
+    dest="/home/{{username}}/Downloads/{{gitkraken_deb_filename}}"
   when: deb_check.rc == 1
 
 - name: Install GitKraken
-  apt: deb="~/Downloads/{{gitkraken_deb_filename}}"
+  apt: deb="/home/{{username}}/Downloads/{{gitkraken_deb_filename}}"
   sudo: true
   when: deb_check.rc == 1  
 

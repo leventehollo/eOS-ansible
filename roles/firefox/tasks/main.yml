@@ -1,6 +1,6 @@
 ---
-#Firefox
 - name: Install Mozilla Firefox
-  apt: pkg=google-chrome-stable state=installed
+  apt: pkg=firefox state=installed
   tags:
     - firefox
+    - browser

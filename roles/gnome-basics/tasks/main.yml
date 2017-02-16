@@ -15,7 +15,7 @@
   apt: name=nautilus state=latest
 
 - name: Configure Nautilus
-  gsetting: user=lev
+  gsetting: user={{username}}
             key={{item[0]}}
             value={{item[1]}}
   with_items:
@@ -40,6 +40,9 @@
     - guake-indicator
     - aptik
 
+- name: Create autostart directory
+  file: path=/home/{{username}}/.config/autostart state=directory mode=0755
+
 - name: Make ClipIt autostarted
   copy:
     src: files/clipit.desktop
@@ -57,7 +60,7 @@
     mode: 0644
 
 - name: Configure Guake
-  gsetting: user=lev
+  gsetting: user={{username}}
             key={{item[0]}}
             value={{item[1]}}
   with_items:

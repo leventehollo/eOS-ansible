@@ -25,17 +25,17 @@
     - office
     - send-anywhere
 
-  - name: Playbook for IMs
-    hosts: localhost
-    connection: local
-    gather_facts: yes
-    become: yes
-    become_method: sudo
-    tags:
-      - im
-    roles:    
-      - { role: telegram, tags: ['im', 'telegram']}
-      - { role: slack, tags: ['im', slack]}          
+- name: Playbook for IMs
+  hosts: localhost
+  connection: local
+  gather_facts: yes
+  become: yes
+  become_method: sudo
+  tags:
+    - im
+  roles:    
+    - { role: telegram, tags: ['im', 'telegram']}
+    - { role: slack, tags: ['im', slack]}          
 
 - name: Playbook for development environments
   hosts: localhost

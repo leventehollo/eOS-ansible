@@ -3,13 +3,9 @@
 
 - name: Add PPA repo for Sublimetext 3
   apt_repository: repo='ppa:webupd8team/sublime-text-3'
-  tags:
-    - sublimetext
 
 - name: Install Sublimetext 3
   apt: name=sublime-text-installer state=latest
-  tags:
-    - sublimetext
 
 - name: Install Sublimetext plugins
   include_role:

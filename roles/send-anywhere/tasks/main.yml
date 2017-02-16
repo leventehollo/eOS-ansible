@@ -9,14 +9,14 @@
 
 - name: Download SendAnywhere
   get_url:
-    url="https://update.send-anywhere.com/linux_downloads/{{send_anywhere_deb_filename.deb}}"
-    dest="~/Downloads/{{send_anywhere_deb_filename}}"
+    url="https://update.send-anywhere.com/linux_downloads/{{send_anywhere_deb_filename}}"
+    dest="/home/{{username}}/Downloads/{{send_anywhere_deb_filename}}"
   when: deb_check.rc == 1
   tags:
     - send-anywhere
 
 - name: Install SendAnywhere
-  apt: deb="~/Downloads/{{send_anywhere_deb_filename}}"
+  apt: deb="/home/{{username}}/Downloads/{{send_anywhere_deb_filename}}"
   sudo: true
   when: deb_check.rc == 1
   tags:

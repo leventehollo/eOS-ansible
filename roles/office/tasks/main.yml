@@ -24,13 +24,13 @@
 - name: Download AcrobatReader
   get_url:
     url="http://ardownload.adobe.com/pub/adobe/reader/unix/9.x/9.5.5/enu/{{acrobat_deb_filename}}"
-    dest="/home/lev/Downloads/{{acrobat_deb_filename}}"
+    dest="/home/{{username}}/Downloads/{{acrobat_deb_filename}}"
   when: acrobat_deb_check.rc == 1
   tags:
     - acrobat
 
 - name: Install AcrobatReader
-  apt: deb="/home/lev/Downloads/{{acrobat_deb_filename}}"
+  apt: deb="/home/{{username}}/Downloads/{{acrobat_deb_filename}}"
   sudo: true
   when: acrobat_deb_check.rc == 1
   tags:

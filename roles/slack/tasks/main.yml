@@ -8,12 +8,12 @@
 - name: Download Slack
   get_url:
     url="{{slack_download_ur}}"
-    dest="~/Downloads/{{slack_deb_filename}}"
+    dest="/home/{{username}}/Downloads/{{slack_deb_filename}}"
   when: deb_check.rc == 1
 
 
 - name: Install Slack
-  apt: deb="~/Downloads/{{slack_deb_filename}}"
+  apt: deb="/home/{{username}}/Downloads/{{slack_deb_filename}}"
   sudo: true
   when: deb_check.rc == 1
 

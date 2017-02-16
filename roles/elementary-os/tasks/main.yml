@@ -22,7 +22,7 @@
     line: 'allow-guest=false'
 
 - name: Configure workspaces
-  gsetting: user=lev
+  gsetting: user={{username}}
             key={{item[0]}}
             value={{item[1]}}
   with_items:
@@ -40,11 +40,11 @@
 - name: Download indicator-workspaces_0.5_all.deb
   get_url:
     url="https://github.com/dyson/indicator-workspaces/releases/download/v0.5/indicator-workspaces_0.5_all.deb"
-    dest="/home/lev/Downloads/indicator-workspaces_0.5_all.deb"
+    dest="/home/{{username}}/Downloads/indicator-workspaces_0.5_all.deb"
   when: indicator_check_deb.rc == 1
 
 - name: Install indicator-workspaces_0.5_all
-  apt: deb="/home/lev/Downloads/indicator-workspaces_0.5_all.deb"
+  apt: deb="/home/{{username}}/Downloads/indicator-workspaces_0.5_all.deb"
   sudo: true
   when: indicator_check_deb.rc == 1
 
@@ -55,7 +55,7 @@
     - indicator-multiload
 
 - name: Configure Session Indicator
-  gsetting: user=lev
+  gsetting: user={{username}}
             key={{item[0]}}
             value={{item[1]}}
   with_items:
@@ -67,14 +67,14 @@
     - ['com.canonical.indicator.session.user-show-menu', 'true']
 
 - name: Configure Workspaces Indicator
-  gsetting: user=lev
+  gsetting: user={{username}}
             key={{item[0]}}
             value={{item[1]}}
   with_items:
     - ['apps.indicator-workspaces show-label', 'false']
 
 - name: Configure Multiload Indicator
-  gsetting: user=lev
+  gsetting: user={{username}}
             key={{item[0]}}
             value={{item[1]}}
   with_items:
@@ -86,7 +86,7 @@
     - ['de.mh21.indicator.multiload.general.system-monitor', 'gnome-system-monitor']
 
 - name: Configure DateTime Indicator
-  gsetting: user=lev
+  gsetting: user={{username}}
             key={{item[0]}}
             value={{item[1]}}
   with_items:
@@ -101,7 +101,7 @@
     - ['com.canonical.indicator.datetime.show-year', 'true']
 
 - name: Configure Power Indicator
-  gsetting: user=lev
+  gsetting: user={{username}}
             key={{item[0]}}
             value={{item[1]}}
   with_items:
@@ -109,21 +109,21 @@
     - ['com.canonical.indicator.power.show-time', 'true']
 
 - name: Configure Sound Indicator
-  gsetting: user=lev
+  gsetting: user={{username}}
             key={{item[0]}}
             value={{item[1]}}
   with_items:
     - ['com.canonical.indicator.sound global-mute', 'true']
 
 - name: Configure Ubuntu
-  gsetting: user=lev
+  gsetting: user={{username}}
             key={{item[0]}}
             value={{item[1]}}
   with_items:
     - ['com.ubuntu.update-notifier.show-apport-cashes', 'false']
 
 - name: Configure Appearance
-  gsetting: user=lev
+  gsetting: user={{username}}
             key={{item[0]}}
             value={{item[1]}}
   with_items:
@@ -138,7 +138,7 @@
 
 
 - name: Configure Interface
-  gsetting: user=lev
+  gsetting: user={{username}}
             key={{item[0]}}
             value={{item[1]}}
   with_items:
@@ -158,7 +158,7 @@
     - ['org.gnome.desktop.peripherals.touchpad.natural-scroll', 'false']
 
 - name: Configure Files App
-  gsetting: user=lev
+  gsetting: user={{username}}
             key={{item[0]}}
             value={{item[1]}}
   with_items:
@@ -170,7 +170,7 @@
     - ['org.gtk.Settings.FileChooser.sort-directories-first', 'true']
 
 - name: Configure Shotwell
-  gsetting: user=lev
+  gsetting: user={{username}}
             key={{item[0]}}
             value={{item[1]}}
   with_items:
@@ -178,7 +178,7 @@
     - ['org.yorba.shotwell.preferences.editing.external-raw-editor', 'rawtherapee']
 
 - name: Configure Key bindings
-  gsetting: user=lev
+  gsetting: user={{username}}
             key={{item[0]}}
             value={{item[1]}}
   with_items:
