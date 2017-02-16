@@ -2,4 +2,7 @@
 sublimetext_packagecontrol_packages:
       - "AutoFileName"      
       - "Terminal"
+      - "GitGutter"   
+      - "AllAutocomplete"   
+      - "Ansible"
 sublimetext_packagecontrol_dir_bin: "~/.config/sublime-text-3/Installed\ Packages"      

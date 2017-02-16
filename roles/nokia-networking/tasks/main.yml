@@ -1,0 +1,10 @@
+---
+- name: Update package list
+  apt: update_cache=yes cache_valid_time=86400
+
+- name: Install Network Manager for OpenConnect
+  apt: name={{item}} state=latest 
+  with_items:
+    - openconnect
+    - network-manager-openconnect
+    - network-manager-openconnect-gnome

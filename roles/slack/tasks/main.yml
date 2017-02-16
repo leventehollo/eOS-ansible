@@ -1,0 +1,20 @@
+---
+- name: Check if Slack is installed
+  command: dpkg-query -W {{slack_deb_filename}}
+  register: deb_check
+  failed_when: deb_check.rc > 1
+  changed_when: deb_check.rc == 1
+
+- name: Download Slack
+  get_url:
+    url="{{slack_download_ur}}"
+    dest="~/Downloads/{{slack_deb_filename}}"
+  when: deb_check.rc == 1
+
+
+- name: Install Slack
+  apt: deb="~/Downloads/{{slack_deb_filename}}"
+  sudo: true
+  when: deb_check.rc == 1
+
+

@@ -1,0 +1,12 @@
+---
+- name: Update package list
+  apt: update_cache=yes cache_valid_time=86400
+
+- name: Add PPA repo for Telegram
+  apt_repository: repo='ppa:atareao/telegram'
+
+- name: Install Telegram
+  apt: name=telegram state=latest
+  tags:
+    - telegram
+    - im

@@ -68,12 +68,3 @@
   apt: name={{item}} state=latest
   with_items:
     - mc
-    - nemo
-
-- name: Install Gnome tools
-  apt: name={{item}} state=latest
-  with_items:
-    - gnome-screensaver
-    - menulibre
-    - clipit
-    - aptik

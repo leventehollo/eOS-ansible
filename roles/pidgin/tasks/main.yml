@@ -1,0 +1,35 @@
+---
+- name: Update package list
+  apt: update_cache=yes cache_valid_time=86400
+
+- name: Install Pidgin
+  apt: name={{item}} state=latest
+  sudo: true
+  with_items:
+    - pidgin
+
+- name: Create config directory in HOME folder for Pidgin
+  file:
+    path: /home/{{username}}/.purple/certificates/x509/tls_peers
+    state: directory
+
+- copy:
+    src: files/accounts.xml
+    dest: /home/{{username}}/.purple/accounts.xml
+    owner: "{{username}}"
+    group: "{{username}}"
+    mode: 0644  
+
+- copy:
+    src: files/prefs.xml
+    dest: /home/{{username}}/.purple/prefs.xml
+    owner: "{{username}}"
+    group: "{{username}}"
+    mode: 0644
+
+- copy:
+    src: files/cambuild2.emea.nsn-net.net
+    dest: /home/{{username}}/.purple/certificates/x509/tls_peers/cambuild2.emea.nsn-net.net
+    owner: "{{username}}"
+    group: "{{username}}"
+    mode: 0644    

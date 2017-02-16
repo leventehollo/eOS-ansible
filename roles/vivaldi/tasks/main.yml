@@ -1,0 +1,24 @@
+---
+- name: Check if Vivaldi is installed
+  command: dpkg-query -W {{vivaldi_deb_filename}}
+  register: vivaldi_deb_check
+  failed_when: vivaldi_deb_check.rc > 1
+  changed_when: vivaldi_deb_check.rc == 1
+  tags:
+    - vivaldi
+
+- name: Download Vivaldi
+  get_url:
+    url="https://downloads.vivaldi.com/stable/{{vivaldi_deb_filename}}"
+    dest="/home/lev/Downloads/{{vivaldi_deb_filename}}"
+  when: vivaldi_deb_check.rc == 1
+  tags:
+    - vivaldi
+
+- name: Install Vivaldi
+  apt: deb="/home/lev/Downloads/{{vivaldi_deb_filename}}"
+  sudo: true
+  when: vivaldi_deb_check.rc == 1
+  tags:
+    - vivaldi
+

@@ -21,19 +21,9 @@
   with_items:
     - openjdk-8-jdk
     - openjdk-8-doc
-    - openjdk-8-jre-lib    
+    - openjdk-8-jre   
   tags: 
     - dev-java
-
-#- name: Install Java 8 OpenJDK
-#  include_role:
-#    name: ChristopherDavenport.universal-java    
-#    vars:
-#      java_type: Open
-#      java_version: "8"
-#      java_home: "{{java_home}}"
-#  tags:
-#    - dev-java
 
 # IntelliJ IDEA
 - name: Install IntelliJ IDEA

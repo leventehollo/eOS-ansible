@@ -1,0 +1,24 @@
+---
+- name: Check if SendAnywhere is installed
+  command: dpkg-query -W {{send_anywhere_deb_filename}}
+  register: deb_check
+  failed_when: deb_check.rc > 1
+  changed_when: deb_check.rc == 1
+  tags:
+    - send-anywhere
+
+- name: Download SendAnywhere
+  get_url:
+    url="https://update.send-anywhere.com/linux_downloads/{{send_anywhere_deb_filename.deb}}"
+    dest="~/Downloads/{{send_anywhere_deb_filename}}"
+  when: deb_check.rc == 1
+  tags:
+    - send-anywhere
+
+- name: Install SendAnywhere
+  apt: deb="~/Downloads/{{send_anywhere_deb_filename}}"
+  sudo: true
+  when: deb_check.rc == 1
+  tags:
+    - send-anywhere
+

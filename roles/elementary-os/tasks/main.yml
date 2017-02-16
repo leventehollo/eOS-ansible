@@ -12,7 +12,14 @@
   with_items:
     - midori-granite
     - pantheon-files
+    - scratch-text-editor
   ignore_errors: True
+
+- name: Disable Guest account
+  lineinfile:
+    dest: /usr/share/lightdm/lightdm.conf.d/40-pantheon-greeter.conf
+    regexp: '^allow-guest='
+    line: 'allow-guest=false'
 
 - name: Configure workspaces
   gsetting: user=lev
@@ -121,13 +128,14 @@
             value={{item[1]}}
   with_items:
     - ['org.pantheon.desktop.gala.appearance.alt-tab-window-opacity', '0.3']
-    - ['org.pantheon.desktop.gala.appearance.button-layout', 'close:minimize,maximize']
+    - ['org.pantheon.desktop.gala.appearance.button-layout', 'close:minimize,maximize']    
     - ['org.pantheon.desktop.gala.behavior.dynamic-workspaces', 'true']
     - ['org.pantheon.desktop.gala.behavior.hotcorner-topleft', 'window-overview-all']
     - ['org.pantheon.desktop.gala.behavior.hotcorner-topright', 'show-workspace-view']
     - ['org.pantheon.desktop.wingpanel.auto-adjust-alpha', 'false']
     - ['org.pantheon.desktop.wingpanel.background-alpha', '0.0']
     - ['org.pantheon.desktop.wingpanel.show-launcher', 'false']
+
 
 - name: Configure Interface
   gsetting: user=lev
@@ -174,8 +182,8 @@
             key={{item[0]}}
             value={{item[1]}}
   with_items:
-    - ['org.gnome.desktop.wm.keybindings begin-move', '[]']
-    - ['org.gnome.desktop.wm.keybindings begin-resize', '[]']
-    - ['org.gnome.desktop.wm.keybindings cycle-group', '[]']
-    - ['org.gnome.desktop.wm.keybindings cycle-windows', '[]']
-    - ['org.gnome.desktop.wm.keybindings cycle-panels', '[]']
+    - ['org.gnome.desktop.wm.keybindings.begin-move', '[]']
+    - ['org.gnome.desktop.wm.keybindings.begin-resize', '[]']
+    - ['org.gnome.desktop.wm.keybindings.cycle-group', '[]']
+    - ['org.gnome.desktop.wm.keybindings.cycle-windows', '[]']
+    - ['org.gnome.desktop.wm.keybindings.cycle-panels', '[]']

@@ -1,16 +1,4 @@
 ---
-# SublimeText 3
-
-- name: Add PPA repo for Sublimetext 3
-  apt_repository: repo='ppa:webupd8team/sublime-text-3'
-  tags:
-    - sublimetext
-
-- name: Install Sublimetext 3
-  apt: name=sublime-text-installer state=latest
-  tags:
-    - sublimetext
-
 # LibreOffice
 
 - name: Add PPA repo for LibreOffice
@@ -47,19 +35,3 @@
   when: acrobat_deb_check.rc == 1
   tags:
     - acrobat
-
-# yED
-
-- name: Download yED
-  get_url:
-    url="{{yed_sh_url}}"
-    dest="/home/lev/Downloads/yed.sh"
-  tags:
-    - yed
-
-- name: Install yED
-  shell: yed.sh >> yed_install.log
-  args:
-    chdir: /home/lev/Downloads/
-  tags:
-    - yed

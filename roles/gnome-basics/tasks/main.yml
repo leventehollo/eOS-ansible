@@ -1,0 +1,65 @@
+---
+- name: Add Gnome3 repository
+  apt_repository: repo='ppa:gnome3-team/gnome3'
+
+- name: Update package list
+  apt: update_cache=yes cache_valid_time=86400
+
+- name: Upgrade packages
+  apt: upgrade=dist
+  register: hello
+- debug: msg="{{ hello.stdout }}"
+  ignore_errors: True
+
+- name: Install Nautilus
+  apt: name=nautilus state=latest
+
+- name: Configure Nautilus
+  gsetting: user=lev
+            key={{item[0]}}
+            value={{item[1]}}
+  with_items:
+    - ['org.gnome.nautilus.preferences.always-use-location-entry', 'true']
+    - ['org.gnome.nautilus.preferences.click-policy', 'double']
+    - ['org.gnome.nautilus.preferences.confirm-trash', 'true']
+    - ['org.gnome.nautilus.preferences.default-folder-view', 'list-view']
+    - ['org.gnome.nautilus.preferences.default-sort-order', 'name']
+    - ['org.gnome.nautilus.preferences.sort-directories-first', 'true']
+    - ['org.gnome.nautilus.list-view.default-visible-columns', "['name', 'size', 'type', 'date_modified', 'owner']"]
+    - ['org.gnome.nautilus.list-view.default-zoom-level', 'smallest']
+    - ['org.gnome.nautilus.icon-view.default-zoom-level', 'smallest']
+
+
+- name: Install Gnome tools
+  apt: name={{item}} state=latest
+  with_items:
+    - gnome-screensaver
+    - menulibre
+    - clipit
+    - guake
+    - guake-indicator
+    - aptik
+
+- name: Make ClipIt autostarted
+  copy:
+    src: files/clipit.desktop
+    dest: /home/{{username}}/.config/autostart/clipit.desktop
+    owner: "{{username}}"
+    group: "{{username}}"
+    mode: 0644
+
+- name: Make Guake autostarted
+  copy:
+    src: files/guake.desktop
+    dest: /home/{{username}}/.config/autostart/guake.desktop
+    owner: "{{username}}"
+    group: "{{username}}"
+    mode: 0644
+
+- name: Configure Guake
+  gsetting: user=lev
+            key={{item[0]}}
+            value={{item[1]}}
+  with_items:
+    - ['org.gnome.desktop.default-applications.terminal.exec', '/usr/bin/guake']
+    - ['org.gnome.desktop.default-applications.terminal.exec-arg', '-f --show']

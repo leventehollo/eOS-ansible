@@ -6,9 +6,11 @@
   become: yes
   become_method: sudo
   roles:
-    - basic
+    - basic    
     - { role: nvidia, tags: ['nvidia']}
-    - { role: elementary_os, tags: ['elementaryOS']}    
+    - { role: gnome-basics, tags: ['gnome', 'elementaryOS']}
+    - { role: elementary-os, tags: ['elementaryOS']}
+  
 
 - name: Playbook for common tools
   hosts: localhost
@@ -17,15 +19,28 @@
   become: yes
   become_method: sudo
   roles:    
-    - browsers    
-    - office    
+    - { role: firefox, tags: ['browsers']}
+    - { role: chrome, tags: ['browsers']}    
+    #- { role: vivaldi, tags: ['browsers']}        
+    - office
+    - send-anywhere
+
+  - name: Playbook for IMs
+    hosts: localhost
+    connection: local
+    gather_facts: yes
+    become: yes
+    become_method: sudo
+    roles:    
+      - { role: telegram, tags: ['im', 'telegram']}
+      - { role: slack, tags: ['im', slack]}          
 
 - name: Playbook for development environments
   hosts: localhost
   connection: local
   gather_facts: yes
-  #become: yes
-  #become_method: sudo
+  become: yes
+  become_method: sudo
   tags: 
     - dev
   roles:        
@@ -39,5 +54,8 @@
   gather_facts: no
   become: yes
   become_method: sudo
-#  roles:
+  roles:
+    - { role: pidgin, tags: ['nokia']}
+    - { role: nokia-networking, tags: ['nokia']}
+
     
