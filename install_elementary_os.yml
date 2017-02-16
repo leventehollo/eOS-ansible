@@ -31,6 +31,8 @@
     gather_facts: yes
     become: yes
     become_method: sudo
+    tags:
+      - im
     roles:    
       - { role: telegram, tags: ['im', 'telegram']}
       - { role: slack, tags: ['im', slack]}          
@@ -46,6 +48,7 @@
   roles:        
     - sublime-text
     - development
+    - { role: gitkraken, tags: ['dev', 'git', 'gitkraken']}    
 
 
 - name: Playbook for Nokia environment
