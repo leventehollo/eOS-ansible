@@ -1,7 +1,7 @@
 ---
 - name: Update .profile
   lineinfile:
-    dest: /home/{{username}}/.profile
+    dest: /home/{{username}}/.bashrc
     line: '[[ -s {{custom_profile_path}} ]] && source {{custom_profile_path}}'
     regexp: '^\[\[ -s {{custom_profile_path}}'
     owner: "{{username}}"
