@@ -36,13 +36,15 @@ export EDITOR=nano
 alias logs="find /var/log -type f -exec file {} \; | grep 'text' | cut -d' ' -f1 | sed -e's/:$//g' | grep -v '[0-9]$' | xargs tail -f"
 
 #Git
-alias gitst='git status'
-alias gitc='git commit'
-alias gita='git add'
-alias gitd='git diff'
-alias gitb='git branch'
-alias gitlog='git log --oneline --decorate=full --color --graph'
-alias gitco='git checkout'
+alias gst='git status'
+alias gc='git commit'
+alias gp='git push'
+alias ga='git add'
+alias gaa='git add --all'
+alias gd='git diff'
+alias gb='git branch'
+alias glog='git log --oneline --decorate=full --color --graph'
+alias gco='git checkout'
 alias gk='gitkraken .'
 alias gr='git rebase'
 alias gri='git rebase --interactive'
