@@ -60,7 +60,13 @@ alias bat='upower -i /org/freedesktop/UPower/devices/battery_BAT0'
 # prompt reformat
 function gitbranch() {
     local res=$(if [ -d .git ]; then git branch; fi | grep '*')
-    if [ ! -z "$res" ]; then echo "[${res:2}]"; fi
+    if [ ! -z "$res" ]; then       
+      if [ "${res:2}" = "master" ]; then         
+        echo $'\e[1;32m'"[${res:2}]"$'\e[0m'
+      else 
+        echo $'\e[1;33m'"[${res:2}]"$'\e[0m'
+      fi
+    fi
 }
 
 function returncode() {
@@ -70,11 +76,9 @@ function returncode() {
 
 function gitchanges() {
     if [ -d .git ]; then
-        if [ "$(git status --untracked-files=no --porcelain)" != "" ]; then 
-        	#echo $'\[\e[1;31m\][\u2605]\[\e[0m\]'; 
+        if [ "$(git status --untracked-files=no --porcelain)" != "" ]; then         	
           echo $'\e[1;31m[\u2605]\e[0m'
-        else
-        	#echo $'\[\e[1;32m\][\u2713]\[\e[0m\]';
+        else        	
           echo $'\e[1;32m[\u2713]\e[0m'
         fi
     fi
@@ -89,4 +93,4 @@ function sshflag() {
   echo $SSH_FLAG
 }
 
-export PS1='\[\e[1;32m\][$(date +%H:%M)][\u`sshflag`:\w]`returncode``gitbranch``gitchanges`\$\[\e[0m\] '
+export PS1='\[\e[1;34m\][$(date +%H:%M)][\u`sshflag`:\w]`returncode``gitbranch``gitchanges`\$\[\e[0m\] '
