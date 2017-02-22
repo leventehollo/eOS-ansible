@@ -1,0 +1,5 @@
+---
+# IntelliJ PyCharm
+- name: Install IntelliJ PyCharm
+  include_role: 
+    name: tersmitten.pycharm    

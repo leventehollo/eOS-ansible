@@ -1,0 +1,5 @@
+---    
+# IntelliJ Node.JS      
+- name: Install Node.js
+  include_role: 
+    name: geerlingguy.nodejs

@@ -8,9 +8,9 @@
   roles:
     - basic    
     - { role: bash-profile, tags: ['bash']}
-    - { role: nvidia, tags: ['nvidia']}
-    - { role: gnome-basics, tags: ['gnome', 'elementaryOS']}
-    - { role: elementary-os, tags: ['elementaryOS']}
+    - { role: nvidia, tags: ['nvidia'], when: ansible_product_version when == 'ThinkPad T420'}
+    - { role: gnome-basics, tags: ['gnome']}
+    - { role: elementary-os, tags: ['elementaryOS'], when: ansible_distribution == 'elementary'}
   
 
 - name: Playbook for common tools
@@ -49,9 +49,12 @@
     - dev
   roles:        
     - sublime-text
-    - development
-    - { role: gitkraken, tags: ['dev', 'git', 'gitkraken']}
-    - { role: sbt, tags: ['dev', 'build', 'sbt', 'playframework']}
+    - { role: git, tags: ['git']}
+    - { role: dev-java, tags: ['dev-java']}
+    - { role: dev-python, tags: ['dev-python']}
+    - { role: dev-nodejs, tags: ['dev-nodejs']}
+    - { role: gitkraken, tags: ['git', 'gitkraken']}
+    - { role: sbt, tags: ['build', 'sbt', 'playframework']}
 
 
 - name: Playbook for Nokia environment

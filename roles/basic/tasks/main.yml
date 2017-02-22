@@ -1,4 +1,13 @@
 ---
+- name: Schedule SSD trim with fstrim with cron
+  copy: src=files/fstrim dest=/etc/cron.daily/fstrim
+  tags:
+    -ssd
+- name: Changing perm of "fstrim", adding "+x"
+  file: dest=/etc/cron.daily/fstrim mode=a+x
+  tags:
+    -ssd
+
 - name: Update package list
   apt: update_cache=yes cache_valid_time=86400
 
