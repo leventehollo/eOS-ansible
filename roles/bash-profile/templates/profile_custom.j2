@@ -1,0 +1,91 @@
+# cd aliases
+alias ..='cd ..'
+alias ...='cd ../..'
+alias ....='cd ../../..'
+
+#APT shortcuts
+alias aud='sudo apt update'
+alias aug='sudo apt upgrade'
+alias ai='sudo apt install'
+alias ar='sudo apt remove'
+alias as='sudo apt search'
+
+# Color for manpages in less makes manpages a little easier to read:
+export LESS_TERMCAP_mb=$'\E[01;31m'
+export LESS_TERMCAP_md=$'\E[01;31m'
+export LESS_TERMCAP_me=$'\E[0m'
+export LESS_TERMCAP_se=$'\E[0m'
+export LESS_TERMCAP_so=$'\E[01;44;33m'
+export LESS_TERMCAP_ue=$'\E[0m'
+export LESS_TERMCAP_us=$'\E[01;32m'
+
+# History
+export HISTFILESIZE=20000
+export HISTSIZE=10000
+shopt -s histappend
+# Combine multiline commands into one in history
+shopt -s cmdhist
+# Ignore duplicates, ls without options and builtin commands and ignore same sucessive entries.
+HISTCONTROL=ignoreboth
+export HISTIGNORE="&:ls:[bf]g:exit"
+
+#Default editor
+export EDITOR=nano
+
+#Logs
+alias logs="find /var/log -type f -exec file {} \; | grep 'text' | cut -d' ' -f1 | sed -e's/:$//g' | grep -v '[0-9]$' | xargs tail -f"
+
+#Git
+alias gitst='git status'
+alias gitc='git commit'
+alias gita='git add'
+alias gitd='git diff'
+alias gitb='git branch'
+alias gitlog='git log --oneline --decorate=full --color --graph'
+alias gitco='git checkout'
+alias gk='gitkraken .'
+alias gr='git rebase'
+alias gri='git rebase --interactive'
+alias gcp='git cherry-pick'
+alias grm='git rm'
+
+#IP
+alias ip="ip addr | grep -w inet | gawk '{if (NR==2) {$0=$2; gsub(/\//,\" \"); print $1;}}'"
+
+#Battery
+alias bat='upower -i /org/freedesktop/UPower/devices/battery_BAT0'
+
+# prompt reformat
+function gitbranch() {
+        local res=$(if [ -d .git ]; then git branch; fi | grep '*')
+    if [ ! -z "$res" ]; then echo "[${res:2}]"; fi
+}
+
+function returncode() {
+    local res=$?
+    if [ ! $res -eq 0 ]; then echo "(ret: $res)"; fi
+}
+
+function gitchanges() {
+    if [ -d .git ]; then
+        if [ "$(git status --untracked-files=no --porcelain)" != "" ]; then echo "(*)"; fi
+    fi
+}
+
+
+
+function __setprompt {
+  local BLUE="\[\033[0;34m\]"
+  local NO_COLOUR="\[\033[0m\]"
+  local SSH_IP=`echo $SSH_CLIENT | awk '{ print $1 }'`
+  local SSH2_IP=`echo $SSH2_CLIENT | awk '{ print $1 }'`
+  if [ $SSH2_IP ] || [ $SSH_IP ] ; then
+    local SSH_FLAG="@\h"
+  fi
+  PS1="$BLUE[\$(date +%H:%M)][\u$SSH_FLAG:\w]\\$ `returncode``gitbranch``gitchanges` $NO_COLOUR"
+  PS2="$BLUE>$NO_COLOUR "
+  PS4='$BLUE+$NO_COLOUR '
+}
+
+__setprompt
+

@@ -7,6 +7,7 @@
   become_method: sudo
   roles:
     - basic    
+    - { role: bash-profile, tags: ['bash']}
     - { role: nvidia, tags: ['nvidia']}
     - { role: gnome-basics, tags: ['gnome', 'elementaryOS']}
     - { role: elementary-os, tags: ['elementaryOS']}
@@ -24,6 +25,7 @@
     #- { role: vivaldi, tags: ['browsers']}        
     - office
     - send-anywhere
+    - { role: productivity, tags: ['productivity']}
 
 - name: Playbook for IMs
   hosts: localhost
@@ -35,7 +37,7 @@
     - im
   roles:    
     - { role: telegram, tags: ['im', 'telegram']}
-    - { role: slack, tags: ['im', slack]}          
+    - { role: slack, tags: ['im', slack]}
 
 - name: Playbook for development environments
   hosts: localhost
@@ -48,7 +50,8 @@
   roles:        
     - sublime-text
     - development
-    - { role: gitkraken, tags: ['dev', 'git', 'gitkraken']}    
+    - { role: gitkraken, tags: ['dev', 'git', 'gitkraken']}
+    - { role: sbt, tags: ['dev', 'build', 'sbt', 'playframework']}
 
 
 - name: Playbook for Nokia environment

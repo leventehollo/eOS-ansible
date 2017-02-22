@@ -1,0 +1,47 @@
+# Toggl
+
+- name: Check if Toggl is installed
+  command: dpkg-query -W toggldesktop
+  register: toggle_deb_check
+  failed_when: toggle_deb_check.rc > 1
+  changed_when: toggle_deb_check.rc == 1
+  tags:
+    - toggl
+
+- name: Download Toggl
+  get_url:
+    url="{{toggl_url}}"
+    dest="/tmp/{{toggl_deb_filename}}"
+  when: toggle_deb_check.rc == 1
+  tags:
+    - toggl
+
+- name: Install Toggl
+  apt: deb="/tmp/{{toggl_deb_filename}}"
+  sudo: true
+  when: toggle_deb_check.rc == 1
+  tags:
+    - toggl
+
+- name: Check if uLauncher is installed
+  command: dpkg-query -W ulauncher
+  register: ulauncher_deb_check
+  failed_when: ulauncher_deb_check.rc > 1
+  changed_when: ulauncher_deb_check.rc == 1
+  tags:
+    - ulauncher
+
+- name: Download uLauncher
+  get_url:
+    url="{{ulauncher_url}}"
+    dest="/tmp/{{ulauncher_deb_filename}}"
+  when: ulauncher_deb_check.rc == 1
+  tags:
+    - ulauncher
+
+- name: Install uLauncher
+  apt: deb="/tmp/{{ulauncher_deb_filename}}"
+  sudo: true
+  when: ulauncher_deb_check.rc == 1
+  tags:
+    - ulauncher

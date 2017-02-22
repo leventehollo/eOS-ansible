@@ -1,0 +1,21 @@
+---
+- name: Update .profile
+  lineinfile:
+    dest: /home/{{username}}/.profile
+    line: '[[ -s {{custom_profile_path}} ]] && source {{custom_profile_path}}'
+    regexp: '^\[\[ -s {{custom_profile_path}}'
+    owner: "{{username}}"
+    state: present
+    insertafter: EOF
+    create: True
+
+- name: Check if .profile_custom file exists
+  stat: path={{custom_profile_path}}
+  register: file_path
+- debug: msg="{{custom_profile_path}} file exists"
+  when: file_path.stat.exists == true
+
+- name: Create .profile_custom
+  template:
+    src: "profile_custom.j2"
+    dest: "{{custom_profile_path}}"

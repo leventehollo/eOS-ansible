@@ -1,0 +1,6 @@
+---
+toggl_deb_filename: toggldesktop.deb
+toggl_url: https://toggl.com/api/v8/installer?app=td&platform=deb64&channel=stable
+
+ulauncher_deb_filename: ulauncher_1.0.0_all.deb
+ulauncher_url: https://launchpad.net/~agornostal/+archive/ubuntu/ulauncher/+files/ulauncher_1.0.0_all.deb

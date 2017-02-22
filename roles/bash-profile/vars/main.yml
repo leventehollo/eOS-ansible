@@ -1,0 +1,3 @@
+---
+username: levente
+custom_profile_path: /home/{{username}}/.profile_custom
