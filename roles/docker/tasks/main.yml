@@ -20,4 +20,5 @@
 - name: Install Docker
   apt: name={{item}} state=latest
   with_items:
-    - docker-engine   
+    - docker-engine
+    - docker-compose
