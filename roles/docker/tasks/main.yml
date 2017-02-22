@@ -29,3 +29,10 @@
     groups: docker
     append: yes
     state: present
+
+- name: Download latest docker-compose
+  get_url:
+    url: https://github.com/docker/compose/releases/download/1.11.1/docker-compose-Linux-x86_64
+    dest: /usr/bin/docker-compose
+    mode: 0755
+    force: yes
