@@ -1,5 +1,23 @@
 ---    
-# IntelliJ Node.JS      
+- name: Check if sources list file exists
+  stat: path=/etc/apt/sources.list.d/nodejs.list
+  register: file_path
+- debug: msg="nodejs.list file exists"
+  when: file_path.stat.exists == true
+
+- name: Add Node.js deb to source list
+  copy: content="deb https://deb.nodesource.com/node_7.x xenial main\ndeb-src https://deb.nodesource.com/node_7.x xenial main" dest="/etc/apt/sources.list.d/nodejs.list"
+  when: file_path.stat.exists == false
+
+- name: Add keys
+  apt_key:
+    url: "https://deb.nodesource.com/gpgkey/nodesource.gpg.key"
+    state: present
+
+- name: Update package list
+  apt: update_cache=yes
+
 - name: Install Node.js
-  include_role: 
-    name: geerlingguy.nodejs
+  apt: name={{item}} state=latest
+  with_items:
+    - nodejs    
