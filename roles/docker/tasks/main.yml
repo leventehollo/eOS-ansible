@@ -1,0 +1,23 @@
+---    
+- name: Check if sources list file exists
+  stat: path=/etc/apt/sources.list.d/docker.list
+  register: file_path
+- debug: msg="docker.list file exists"
+  when: file_path.stat.exists == true
+
+- name: Add keys
+  apt_key:
+    url: "https://apt.dockerproject.org/gpg"
+    state: present
+
+- name: Add Docker to source list
+  copy: content="deb https://apt.dockerproject.org/repo/ ubuntu-xenial main" dest="/etc/apt/sources.list.d/docker.list"
+  when: file_path.stat.exists == false
+
+- name: Update package list
+  apt: update_cache=yes
+
+- name: Install Docker
+  apt: name={{item}} state=latest
+  with_items:
+    - docker-engine   

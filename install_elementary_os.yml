@@ -50,6 +50,7 @@
   roles:        
     - sublime-text
     - { role: git, tags: ['git']}
+    - { role: docker, tags: ['docker']}
     - { role: dev-java, tags: ['dev-java']}
     - { role: dev-python, tags: ['dev-python']}
     - { role: dev-nodejs, tags: ['dev-nodejs']}
