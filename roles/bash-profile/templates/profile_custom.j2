@@ -65,15 +65,15 @@ function gitbranch() {
 
 function returncode() {
     local res=$?
-    if [ ! $res -eq 0 ]; then echo "(ret: $res)"; fi
+    if [ ! $res -eq 0 ]; then echo "[ret: $res]"; fi
 }
 
 function gitchanges() {
     if [ -d .git ]; then
         if [ "$(git status --untracked-files=no --porcelain)" != "" ]; then 
-        	echo $'(\u2605)'; 
+        	echo $'[\u2605]'; 
         else
-        	echo $'(\u2713)';
+        	echo $'[\u2713]';
         fi
     fi
 }
@@ -87,4 +87,4 @@ function sshflag() {
   echo $SSH_FLAG
 }
 
-export PS1='\[\e[1;32m\][$(date +%H:%M)][\u`sshflag`:\w] `returncode``gitbranch``gitchanges`\$\[\e[0m\] '
+export PS1='\[\e[1;32m\][$(date +%H:%M)][\u`sshflag`:\w]`returncode``gitbranch``gitchanges`\$\[\e[0m\] '
