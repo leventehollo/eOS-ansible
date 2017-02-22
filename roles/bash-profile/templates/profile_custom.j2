@@ -59,7 +59,7 @@ alias bat='upower -i /org/freedesktop/UPower/devices/battery_BAT0'
 
 # prompt reformat
 function gitbranch() {
-        local res=$(if [ -d .git ]; then git branch; fi | grep '*')
+    local res=$(if [ -d .git ]; then git branch; fi | grep '*')
     if [ ! -z "$res" ]; then echo "[${res:2}]"; fi
 }
 
@@ -70,24 +70,21 @@ function returncode() {
 
 function gitchanges() {
     if [ -d .git ]; then
-        if [ "$(git status --untracked-files=no --porcelain)" != "" ]; then echo "(*)"; fi
+        if [ "$(git status --untracked-files=no --porcelain)" != "" ]; then 
+        	echo $'(\u2605)'; 
+        else
+        	echo $'(\u2713)';
+        fi
     fi
 }
 
-
-
-function __setprompt {
-  local BLUE="\[\033[0;34m\]"
-  local NO_COLOUR="\[\033[0m\]"
+function sshflag() {
   local SSH_IP=`echo $SSH_CLIENT | awk '{ print $1 }'`
   local SSH2_IP=`echo $SSH2_CLIENT | awk '{ print $1 }'`
   if [ $SSH2_IP ] || [ $SSH_IP ] ; then
     local SSH_FLAG="@\h"
   fi
-  PS1="$BLUE[\$(date +%H:%M)][\u$SSH_FLAG:\w]\\$ `returncode``gitbranch``gitchanges` $NO_COLOUR"
-  PS2="$BLUE>$NO_COLOUR "
-  PS4='$BLUE+$NO_COLOUR '
+  echo $SSH_FLAG
 }
 
-__setprompt
-
+export PS1='\[\e[1;32m\][$(date +%H:%M)][\u`sshflag`:\w] `returncode``gitbranch``gitchanges`\$\[\e[0m\] '
