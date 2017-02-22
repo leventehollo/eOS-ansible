@@ -71,9 +71,11 @@ function returncode() {
 function gitchanges() {
     if [ -d .git ]; then
         if [ "$(git status --untracked-files=no --porcelain)" != "" ]; then 
-        	echo $'[\u2605]'; 
+        	#echo $'\[\e[1;31m\][\u2605]\[\e[0m\]'; 
+          echo $'\e[1;31m[\u2605]\e[0m'
         else
-        	echo $'[\u2713]';
+        	#echo $'\[\e[1;32m\][\u2713]\[\e[0m\]';
+          echo $'\e[1;32m[\u2713]\e[0m'
         fi
     fi
 }
