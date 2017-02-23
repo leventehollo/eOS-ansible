@@ -26,6 +26,7 @@
     - office
     - send-anywhere
     - { role: productivity, tags: ['productivity']}
+    - { role: virtualbox, tags: ['virtualbox']}
 
 - name: Playbook for IMs
   hosts: localhost

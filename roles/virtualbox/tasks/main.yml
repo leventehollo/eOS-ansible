@@ -1,0 +1,25 @@
+---    
+- name: Check if sources list file exists
+  stat: path=/etc/apt/sources.list.d/virtualbox.list
+  register: file_path
+- debug: msg="virtualbox.list file exists"
+  when: file_path.stat.exists == true
+
+- name: Add VirtualBox deb to source list
+  copy: content="deb http://download.virtualbox.org/virtualbox/debian xenial contrib" dest="/etc/apt/sources.list.d/virtualbox.list"
+  when: file_path.stat.exists == false
+
+- name: Add keys
+  apt_key:
+    url: "https://www.virtualbox.org/download/oracle_vbox.asc"
+    state: present
+
+- name: Update package list
+  apt: update_cache=yes
+
+- name: Install VirtualBox
+  apt: name={{item}} state=latest
+  with_items:
+    - virtualbox
+    - virtualbox-ext-pack
+    - virtualbox-guest-additions-iso
