@@ -27,6 +27,7 @@
     - send-anywhere
     - { role: productivity, tags: ['productivity']}
     - { role: virtualbox, tags: ['virtualbox']}
+    - { role: spotify, tags: ['spotify','music']}
 
 - name: Playbook for IMs
   hosts: localhost

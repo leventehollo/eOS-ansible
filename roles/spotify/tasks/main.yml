@@ -1,0 +1,26 @@
+---
+- name: Check if sources list file exists
+  stat: path=/etc/apt/sources.list.d/spotify.list
+  register: file_path
+- debug: msg="spotify.list file exists"
+  when: file_path.stat.exists == true
+
+- name: Add SBT to source list
+  copy: content="deb http://repository.spotify.com stable non-free" dest="/etc/apt/sources.list.d/spotify.list"
+  when: file_path.stat.exists == false
+
+- name: Add APT key  
+  apt_key:
+    keyserver: keyserver.ubuntu.com
+    id: D2C19886
+  
+- name: Update package list
+  apt: update_cache=yes
+
+- name: Install SBT
+  apt: name={{item}} state=latest
+  with_items:
+    - spotify-client
+    - spotify-client-gnome-support
+
+
