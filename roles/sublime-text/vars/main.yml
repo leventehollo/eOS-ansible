@@ -1,4 +1,5 @@
 ---
+sublimetext_apt_file: "/etc/apt/sources.list.d/sublime-text.list"
 sublimetext_packagecontrol_packages:
       - "AutoFileName"      
       - "Terminal"

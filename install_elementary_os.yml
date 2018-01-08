@@ -8,7 +8,7 @@
   roles:
     - basic    
     - { role: bash-profile, tags: ['bash']}
-    - { role: nvidia, tags: ['nvidia'], when: ansible_product_version when == 'ThinkPad T420'}
+    #- { role: nvidia, tags: ['nvidia'], when: ansible_product_version when == 'ThinkPad T420'}
     - { role: gnome-basics, tags: ['gnome']}
     - { role: elementary-os, tags: ['elementaryOS'], when: ansible_distribution == 'elementary'}
   
@@ -20,14 +20,14 @@
   become: yes
   become_method: sudo
   roles:    
-    - { role: firefox, tags: ['browsers']}
+    #- { role: firefox, tags: ['browsers']}
     - { role: chrome, tags: ['browsers']}    
     #- { role: vivaldi, tags: ['browsers']}        
     - office
     - send-anywhere
-    - { role: productivity, tags: ['productivity']}
+    #- { role: productivity, tags: ['productivity']}
     - { role: virtualbox, tags: ['virtualbox']}
-    - { role: spotify, tags: ['spotify','music']}
+    #- { role: spotify, tags: ['spotify','music']}
 
 - name: Playbook for IMs
   hosts: localhost
@@ -39,7 +39,7 @@
     - im
   roles:    
     - { role: telegram, tags: ['im', 'telegram']}
-    - { role: slack, tags: ['im', slack]}
+    #- { role: slack, tags: ['im', slack]}
 
 - name: Playbook for development environments
   hosts: localhost
@@ -50,7 +50,7 @@
   tags: 
     - dev
   roles:        
-    - sublime-text
+    - {role: sublime-text, tags: ['sublime-text']}
     - { role: git, tags: ['git']}
     - { role: docker, tags: ['docker']}
     - { role: dev-java, tags: ['dev-java']}

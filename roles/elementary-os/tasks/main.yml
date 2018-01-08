@@ -15,6 +15,13 @@
     - scratch-text-editor
     - epiphany
     - epiphany-browser
+    - audience
+    - scratch-text-editor
+    - noise
+    - pantheon-files
+    - pantheon-photos
+    - pantheon-mail
+
   ignore_errors: True
 
 - name: Disable Guest account

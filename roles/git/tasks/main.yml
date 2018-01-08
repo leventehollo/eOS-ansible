@@ -1,15 +1,3 @@
 ---
 - name: Install Git  
   apt: name=git state=latest
-
-- name: Install Git plugin for Sublimetext if installed
-  command: dpkg-query -W sublime-text
-  register: sublimetext_check
-
-- include_role:
-    name: igor_mukhin.sublimetext3_packagecontrol
-    vars:      
-      packagecontrol_packages: 
-        - "Git"
-        - "GitGutter"
-  when: sublimetext_check.rc == 1

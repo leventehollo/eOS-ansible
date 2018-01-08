@@ -11,20 +11,22 @@
 - name: Install IntelliJ IDEA
   include_role:      
     name: gantsign.intellij
-    vars:
-      intellij_default_jdk_home: "{{intellij_default_jdk_home}}"
-      intellij_default_jdk: "{{intellij_default_jdk}}"
-      intellij_default_maven_home: "{{intellij_default_maven_home}}"
-      intellij_plugins:
-        - CheckStyle-IDEA
-      intellij_disabled_plugins:            
-        - CVS
-        - com.intellij.uiDesigner            
-        - TestNG-J
-        - hg4idea            
-        - AntSupport
-        - DevKit
-      intellij_codestyles:
-        - name: GoogleStyle
-          url: 'https://raw.githubusercontent.com/google/styleguide/gh-pages/intellij-java-google-style.xml'
-      intellij_active_codestyle: GoogleStyle
+  vars:
+    users:
+      - username: "{{username}}"
+        #intellij_default_jdk_home: "{{intellij_default_jdk_home}}"
+        #intellij_default_jdk: "{{intellij_default_jdk}}"
+        #intellij_default_maven_home: "{{intellij_default_maven_home}}"
+        intellij_plugins:
+          - CheckStyle-IDEA
+        intellij_disabled_plugins:            
+          - CVS
+          - com.intellij.uiDesigner            
+          - TestNG-J
+          - hg4idea            
+          - AntSupport
+          - DevKit
+        intellij_codestyles:
+          - name: GoogleStyle
+            url: 'https://raw.githubusercontent.com/google/styleguide/gh-pages/intellij-java-google-style.xml'
+        intellij_active_codestyle: GoogleStyle
