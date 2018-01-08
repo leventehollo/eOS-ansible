@@ -1,0 +1,38 @@
+---
+# Wavebox
+
+- name: Does the Wavebox apt file exist?
+  command: test -f {{wavebox_apt_file}}
+  register: wavebox_apt_exists
+  ignore_errors: True
+  tags:
+    - wavebox
+
+- name: Add Sublime key
+  shell: wget -q -O - https://wavebox.io/dl/client/repo/archive.key | apt-key add -
+  when: wavebox_apt_exists.rc == 1
+  tags:
+    - wavebox
+
+- name: Ensure apt is set up to work with https sources
+  apt: pkg=apt-transport-https state=installed
+  tags:
+    - wavebox
+
+- name: Add channel to sources list
+  shell:   echo "deb https://wavebox.io/dl/client/repo/ x86_64/" | sudo tee --append /etc/apt/sources.list.d/wavebox.list
+  when: wavebox_apt_exists.rc == 1
+  tags:
+    - wavebox
+
+- name: Update apt cache
+  apt: update_cache=yes
+  when: wavebox_apt_exists.rc == 1
+  tags:
+    - wavebox
+
+- name: Install Wavebox
+  apt: pkg=wavebox state=installed
+  tags:
+    - wavebox
+      
