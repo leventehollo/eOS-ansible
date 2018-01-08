@@ -31,7 +31,8 @@
     line: 'allow-guest=false'
 
 - name: Configure workspaces
-  gsetting: key={{item[0]}}
+  gsetting: user={{username}}
+            key={{item[0]}}
             value={{item[1]}}
   with_items:
     - ['org.gnome.mutter.dynamic-workspaces','true']
@@ -62,13 +63,15 @@
     - indicator-multiload
 
 - name: Configure Workspaces Indicator
-  gsetting: key={{item[0]}}
+  gsetting: user={{username}}
+            key={{item[0]}}
             value={{item[1]}}
   with_items:
     - ['apps.indicator-workspaces.show-label', 'false']
 
 - name: Configure Multiload Indicator
-  gsetting: key={{item[0]}}
+  gsetting: user={{username}}
+            key={{item[0]}}
             value={{item[1]}}
   with_items:
     - ['de.mh21.indicator.multiload.general.autostart', 'true']
@@ -79,13 +82,15 @@
     - ['de.mh21.indicator.multiload.general.system-monitor', 'gnome-system-monitor']
 
 - name: Configure Ubuntu
-  gsetting: key={{item[0]}}
+  gsetting: user={{username}}
+            key={{item[0]}}
             value={{item[1]}}
   with_items:
     - ['com.ubuntu.update-notifier.show-apport-cashes', 'false']
 
 - name: Configure Appearance
-  gsetting: key={{item[0]}}
+  gsetting: user={{username}}
+            key={{item[0]}}
             value={{item[1]}}
   with_items:
     - ['org.pantheon.desktop.gala.appearance.alt-tab-window-opacity', '0.3']
@@ -93,15 +98,16 @@
     - ['org.pantheon.desktop.gala.behavior.dynamic-workspaces', 'true']
     - ['org.pantheon.desktop.gala.behavior.hotcorner-topleft', 'window-overview-all']
     - ['org.pantheon.desktop.gala.behavior.hotcorner-topright', 'show-workspace-view']    
-    - ['org.pantheon.desktop.slingshot.columns', 2]
-    - ['org.pantheon.desktop.slingshot.rows', 2]
+    #- ['org.pantheon.desktop.slingshot.columns', 2]
+    #- ['org.pantheon.desktop.slingshot.rows', 2]
     - ['org.pantheon.desktop.wingpanel.indicators.bluetooth.bluetooth-enabled', 'true']
     - ['org.pantheon.desktop.wingpanel.indicators.datetime.show-weeks', 'true']
     - ['org.pantheon.desktop.wingpanel.indicators.power.show-percentage', 'true']
 
 
 - name: Configure Plank
-  gsetting: key={{item[0]}}
+  gsetting: user={{username}}
+            key={{item[0]}}
             value={{item[1]}}
   with_items:
     - ['net.launchpad.plank.docks.dock1.position', 'left']
@@ -113,14 +119,16 @@
     - ['org.gtk.Settings.FileChooser.sort-directories-first', 'true']
 
 - name: Configure Shotwell
-  gsetting: key={{item[0]}}
+  gsetting: user={{username}}
+            key={{item[0]}}
             value={{item[1]}}
   with_items:
     - ['org.pantheon.photos.preferences.editing.external-photo-editor', 'gimp']
     - ['org.pantheon.photos.preferences.editing.external-raw-editor', 'rawtherapee']
 
 - name: Configure Key bindings
-  gsetting: key={{item[0]}}
+  gsetting: user={{username}}
+            key={{item[0]}}
             value={{item[1]}}
   with_items:
     - ['org.gnome.desktop.wm.keybindings.begin-move', '[]']

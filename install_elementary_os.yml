@@ -10,7 +10,7 @@
     - { role: bash-profile, tags: ['bash']}
     #- { role: nvidia, tags: ['nvidia'], when: ansible_product_version when == 'ThinkPad T420'}
     - { role: gnome-basics, tags: ['gnome']}
-    - { role: elementary-os, tags: ['elementaryOS'], when: ansible_distribution == 'elementary'}
+    - { role: elementary-os, tags: ['elementaryOS'], when: ansible_distribution == 'elementary OS'}
   
 
 - name: Playbook for common tools
@@ -28,6 +28,7 @@
     #- { role: productivity, tags: ['productivity']}
     - { role: virtualbox, tags: ['virtualbox']}
     #- { role: spotify, tags: ['spotify','music']}
+    - { role: wavebox, tags: ['wavebox','email']}
 
 - name: Playbook for IMs
   hosts: localhost
